@@ -28,6 +28,7 @@ setup(
     packages=find_packages(),
     author='see README.txt',
     author_email='github.ps@gmail.com',
+    url="https://github.com/slingpy/slingpy",
     license="MIT",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
