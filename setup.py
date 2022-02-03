@@ -24,6 +24,7 @@ with open('requirements.txt') as f:
 setup(
     name='slingpy',
     version='0.1.0',
+    python_requires=">=3.8",
     packages=find_packages(),
     author='see README.txt',
     author_email='github.ps@gmail.com',
@@ -32,6 +33,8 @@ setup(
     long_description_content_type="text/markdown",
     install_requires=install_requires,
     classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ]
 )
