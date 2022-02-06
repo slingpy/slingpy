@@ -20,12 +20,26 @@ import glob
 import inspect
 import importlib
 import importlib.util
-from typing import AnyStr, Dict
+from pathlib import Path
+from typing import AnyStr, Dict, List
 from slingpy.utils.logging import warn
 
 
 class PluginTools(object):
     """ Tools for working with python plugins loaded at runtime using __importlib__. """
+    @staticmethod
+    def get_available_plugins(search_directory: AnyStr, check_for_subclasses: List = None):
+        classes = []
+        for path in Path(search_directory).rglob('*.py'):
+            modname = "dynamic_plugin"
+            spec = importlib.util.spec_from_file_location(modname, path)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            for name, obj in inspect.getmembers(module):
+                if inspect.isclass(obj) and all([issubclass(obj, subclass) for subclass in check_for_subclasses]):
+                    classes.append(obj)
+        return classes
+
     @staticmethod
     def load_plugin(name: AnyStr, search_directory: AnyStr):
         """
