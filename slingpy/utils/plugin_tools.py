@@ -31,7 +31,7 @@ class PluginTools(object):
     def get_available_plugins(search_directory: AnyStr, check_for_subclasses: List = None):
         classes = []
         for path in Path(search_directory).rglob('*.py'):
-            modname = "dynamic_plugin"
+            modname = os.path.basename(path)[:-3]
             spec = importlib.util.spec_from_file_location(modname, path)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
