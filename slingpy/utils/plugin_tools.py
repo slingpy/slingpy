@@ -21,42 +21,50 @@ import inspect
 import importlib
 import importlib.util
 from pathlib import Path
-from typing import AnyStr, Dict, List
 from slingpy.utils.logging import warn
+from typing import AnyStr, Dict, List, Callable
 
 
 class PluginTools(object):
     """ Tools for working with python plugins loaded at runtime using __importlib__. """
     @staticmethod
-    def get_available_plugins(search_directory: AnyStr, check_for_subclasses: List = None):
+    def get_available_plugins(search_directory: AnyStr, check_for_subclasses: List = None,
+                              module_name_prefix: AnyStr = "",
+                              new_module_encountered_hook: Callable = lambda module_name, module: None):
         classes = []
         for path in Path(search_directory).rglob('*.py'):
-            modname = os.path.basename(path)[:-3]
+            modname = module_name_prefix + os.path.basename(path)[:-3]
             spec = importlib.util.spec_from_file_location(modname, path)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
+            new_module_encountered_hook(modname, module)
             for name, obj in inspect.getmembers(module):
                 if inspect.isclass(obj) and all([issubclass(obj, subclass) for subclass in check_for_subclasses]):
                     classes.append(obj)
         return classes
 
     @staticmethod
-    def load_plugin(name: AnyStr, search_directory: AnyStr):
+    def load_plugin(name: AnyStr, search_directory: AnyStr,
+                    module_name_prefix: AnyStr = "",
+                    new_module_encountered_hook: Callable = lambda module_name, module: None):
         """
         Loads a plugin dynamically.
 
         Args:
             name: The name of the plugin to be loaded. Must be exact match with the class name given in the code.
             search_directory: The directory to search for the plugin.
+            module_name_prefix: Prefix to apply to dynamically loaded module's names.
+            new_module_encountered_hook: Callable hook to trigger if a new module is loaded dynamically.
 
         Returns:
             The loaded plugin class.
         """
         for module_path in glob.glob(search_directory + "/*.py"):
-            modname = os.path.basename(module_path)[:-3]
+            modname = module_name_prefix + os.path.basename(module_path)[:-3]
             spec = importlib.util.spec_from_file_location(modname, module_path)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
+            new_module_encountered_hook(modname, module)
             cls = getattr(module, name, None)
             if cls is not None:
                 return cls
@@ -73,7 +81,9 @@ class PluginTools(object):
         return available_model_params
 
     @staticmethod
-    def instantiate_plugin(name: AnyStr, search_directory: AnyStr, kwargs: Dict = None):
+    def instantiate_plugin(name: AnyStr, search_directory: AnyStr, kwargs: Dict = None,
+                           module_name_prefix: AnyStr = "",
+                           new_module_encountered_hook: Callable = lambda module_name, module: None):
         """
         Instantiates a plugin instance dynamically.
 
@@ -81,6 +91,8 @@ class PluginTools(object):
             name: The name of the plugin. Must be exact match with the class name given in the code.
             search_directory: The directory to search for the plugin.
             kwargs: The instance arguments to pass on instantiation.
+            module_name_prefix: Prefix to apply to dynamically loaded module's names.
+            new_module_encountered_hook: Callable hook to trigger if a new module is loaded dynamically.
 
         Returns:
             The loaded plugin instance.
@@ -88,7 +100,9 @@ class PluginTools(object):
         if kwargs is None:
             kwargs = {}
 
-        cls = PluginTools.load_plugin(name=name, search_directory=search_directory)
+        cls = PluginTools.load_plugin(name=name, search_directory=search_directory,
+                                      module_name_prefix=module_name_prefix,
+                                      new_module_encountered_hook=new_module_encountered_hook)
         if cls is not None:
             available_model_params = PluginTools.get_available_instance_parameters(cls, kwargs)
             instance = cls(**available_model_params)
