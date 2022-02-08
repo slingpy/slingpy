@@ -151,7 +151,7 @@ class TorchModel(TarfileSerialisationBaseModel):
             if self.preprocess_y_fn is not None:
                 model_labels = self.preprocess_y_fn(model_labels)
 
-            y_pred_i = self.model(model_inputs)
+            y_pred_i = [y.cpu() for y in self.model([m.to(device) for m in model_inputs])]
             loss = self.loss(y_pred_i, model_labels)
             return y_pred_i, loss
 
@@ -209,6 +209,7 @@ class TorchModel(TarfileSerialisationBaseModel):
         info("Resetting to best encountered model at", model_file_path, ".")
 
         # Reset to the best model observed in training.
+        self.model = self.model.cpu()
         self.model.load_state_dict(torch.load(model_file_path))
         shutil.rmtree(temp_dir)  # Cleanup temporary directory after training.
         return self
