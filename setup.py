@@ -23,7 +23,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='slingpy',
-    version='0.1.3',
+    version='0.1.4',
     python_requires=">=3.8",
     packages=find_packages(),
     author='see README.txt',

@@ -101,7 +101,7 @@ class ArgumentDictionary(object):
             return the_hash.to_bytes(the_hash.bit_length(), byteorder='big')
         elif hasattr(value, "__hash__") and value.__hash__ is not None:
             the_hash = value.__hash__()
-            the_hash = the_hash.to_bytes(the_hash.bit_length(), byteorder='big')
+            the_hash = the_hash.to_bytes(the_hash.bit_length(), byteorder='big', signed=the_hash < 0)
             return the_hash
         elif isinstance(value, Iterable):
             the_hash = b"".join([self._get_bytes(it) for it in value])
