@@ -153,7 +153,7 @@ class HyperoptRunPolicy(CompositeRunPolicy):
             test_score_dicts.append(results_w_metadata.run_result.test_scores)
             model_paths.append(results_w_metadata.run_result.model_path)
 
-            eval_dict = results_w_metadata.run_result.test_scores
+            eval_dict = results_w_metadata.run_result.validation_scores
             score = eval_dict[hyperopt_metric_name]
 
             best_params_message = HyperoptRunPolicy.print_run_results(results_w_metadata.arguments,
