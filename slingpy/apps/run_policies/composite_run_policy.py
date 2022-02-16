@@ -112,20 +112,25 @@ class CompositeRunPolicy(AbstractRunPolicy):
                 ))
         result_dict_paths = list(map(lambda x: x[1], sorted(result_dicts, key=lambda x: x[0])))
 
-        all_exceptions = self.handle_child_process_exceptions(all_kwargs, result_dict_paths)
-        if len(all_exceptions) != 0:
-            error(
-                f"There were {len(all_exceptions)} exceptions in subprocesses. Re-raising the last error."
-            )
-            raise all_exceptions[-1][1]
-
         # Load the serialised results from disk.
         run_results = []
         for result_dict_path in result_dict_paths:
             with open(result_dict_path, "rb") as fp:
                 run_results_w_metadata = pickle.load(fp)
                 run_results.append(run_results_w_metadata)
-            os.unlink(result_dict_path)  # Remove references from disk after aggregation.
-        self.total_runtime_in_seconds = sum([run_result.run_time for run_result in run_results])
+
+        all_exceptions = self.handle_child_process_exceptions(all_kwargs, run_results)
+        if len(all_exceptions) != 0:
+            error(
+                f"There were {len(all_exceptions)} exceptions in subprocesses. Re-raising the last error."
+            )
+            raise all_exceptions[-1][1]
+
+        for result_dict_path in result_dict_paths:
+            # Remove references from disk after aggregation.
+            os.unlink(result_dict_path)
+
+        self.total_runtime_in_seconds = sum([run_result.run_time if hasattr(run_result, "run_time") else 0
+                                             for run_result in run_results])
         run_result = self.aggregate_results(run_results, original_arguments=kwargs)
         return run_result
