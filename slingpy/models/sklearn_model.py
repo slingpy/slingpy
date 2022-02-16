@@ -60,8 +60,12 @@ class SklearnModel(PickleableBaseModel):
             data = self.merge_strategy_x.resolve(dataset_x.subset(list(map(str, current_indices))).get_data())[0]
             y_pred = self.get_model_prediction(data)
             y_preds.append(y_pred)
-        y_preds = np.concatenate(y_preds, axis=0)
-        return [y_preds]
+
+        if len(y_preds) != 0:
+            y_preds = np.concatenate(y_preds, axis=0)
+            return [y_preds]
+        else:
+            return []
 
     def fit(self, train_x: AbstractDataSource, train_y: Optional[AbstractDataSource] = None,
             validation_set_x: Optional[AbstractDataSource] = None,
