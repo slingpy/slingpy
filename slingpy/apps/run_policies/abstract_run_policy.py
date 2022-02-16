@@ -94,7 +94,10 @@ class AbstractRunPolicy(ArgumentDictionary):
         if not os.path.isdir(tmp_results_dir):
             os.mkdir(tmp_results_dir)
 
-        run_results_w_metadata = base_policy.run(**kwargs)
+        try:
+            run_results_w_metadata = base_policy.run(**kwargs)
+        except Exception as e:
+            run_results_w_metadata = e  # Propagate exceptions to the handler.
 
         tmp_result_file_path = os.path.join(tmp_results_dir, "results.pickle")
         with open(tmp_result_file_path, "wb") as fp:

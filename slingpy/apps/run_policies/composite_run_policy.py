@@ -17,9 +17,11 @@ DEALINGS IN THE SOFTWARE.
 """
 import os
 import pickle
+import traceback
 from typing import List, Dict
 from functools import partial
 from abc import abstractmethod
+from slingpy.utils.logging import error
 from slingpy.apps.app_paths import AppPaths
 from slingpy.utils.nestable_pool import NestablePool as Pool
 from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult, RunResultWithMetaData
@@ -78,6 +80,16 @@ class CompositeRunPolicy(AbstractRunPolicy):
         run_results_w_metadata = RunResultWithMetaData(run_results, run_time, arguments=kwargs)
         return run_results_w_metadata
 
+    def handle_child_process_exceptions(self, arg_list, ordered_outputs):
+        all_exceptions = []
+        for args, outputs in zip(arg_list, ordered_outputs):
+            if isinstance(outputs, Exception):
+                error("Run args were:", args)
+                error(traceback.format_exception(None, outputs, outputs.__traceback__))
+                error(outputs)
+                all_exceptions.append([args, outputs])
+        return all_exceptions
+
     def _run(self, **kwargs) -> RunResult:
         all_kwargs = self.prepare_arguments(kwargs)
 
@@ -99,6 +111,13 @@ class CompositeRunPolicy(AbstractRunPolicy):
                     chunksize=1
                 ))
         result_dict_paths = list(map(lambda x: x[1], sorted(result_dicts, key=lambda x: x[0])))
+
+        all_exceptions = self.handle_child_process_exceptions(all_kwargs, result_dict_paths)
+        if len(all_exceptions) != 0:
+            error(
+                f"There were {len(all_exceptions)} exceptions in subprocesses. Re-raising the last error."
+            )
+            raise all_exceptions[-1][1]
 
         # Load the serialised results from disk.
         run_results = []
