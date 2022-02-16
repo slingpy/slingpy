@@ -34,7 +34,8 @@ class HyperoptRunPolicy(CompositeRunPolicy):
     A runnable policy for hyper-parameter optimisation.
     """
     def __init__(self, base_policy: AbstractRunPolicy, app_paths: AppPaths,
-                 hyperopt_params: Dict[AnyStr, Union[List, Tuple]], exploration_strategy: AbstractExplorationStrategy,
+                 hyperopt_params: Dict[AnyStr, Union[List, Tuple]],
+                 exploration_strategy: AbstractExplorationStrategy,
                  max_num_hyperopt_runs: int, run_parallel: bool = False,
                  max_num_parallel_runs: int = 10):
         super(HyperoptRunPolicy, self).__init__(
@@ -51,7 +52,7 @@ class HyperoptRunPolicy(CompositeRunPolicy):
         __self.max_num_hyperopt_runs__. """
         self.best_score_index = 0
         """ The index of the hyper-parameter optimization run that had the best score so far. """
-        self.best_score = np.finfo(float).min
+        self.best_score = None
         """ The best observed score so far across hyper-parameter optimization runs. """
         self.best_params = ""
         """ The parameter set corresponding to the trial with the best observed score so far. """
@@ -145,6 +146,7 @@ class HyperoptRunPolicy(CompositeRunPolicy):
         best_output_directory = self.get_best_output_directory(original_arguments)
         final_output_directory = self.get_final_output_directory(original_arguments)
 
+        self.best_score = float("-inf") if hyperopt_comparator == ">" else float("inf")
         score_dicts, test_score_dicts, model_paths = [], [], []
         for i, results_w_metadata in enumerate(results):
             score_dicts.append(results_w_metadata.run_result.validation_scores)
