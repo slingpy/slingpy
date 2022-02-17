@@ -29,7 +29,7 @@ from slingpy.utils.argument_dictionary import ArgumentDictionary
 class RunResult(object):
     validation_scores: Dict[AnyStr, Any]
     test_scores: Dict[AnyStr, Any]
-    model_path: Optional[AnyStr]
+    model_path: Optional[AnyStr] = None
 
 
 @dataclass
