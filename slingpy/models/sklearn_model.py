@@ -16,8 +16,8 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import numpy as np
-from typing import Optional, List
 from sklearn.base import BaseEstimator
+from typing import Optional, List, AnyStr
 from slingpy.utils.plugin_tools import PluginTools
 from slingpy.data_access.merge_strategies import *
 from slingpy.models.abstract_base_model import AbstractBaseModel
@@ -48,16 +48,20 @@ class SklearnModel(PickleableBaseModel):
             y_pred = self.model.predict(data)
         return y_pred
 
-    def predict(self, dataset_x: AbstractDataSource, batch_size: int = 256) -> List[np.ndarray]:
+    def predict(self, dataset_x: AbstractDataSource, batch_size: int = 256,
+                row_names: List[AnyStr] = None) -> List[np.ndarray]:
         if self.model is None:
             self.model = self.build()
+        if row_names is None:
+            row_names = dataset_x.get_row_names()
 
-        available_indices = dataset_x.get_row_names()
         all_ids, y_preds, y_trues = [], [], []
-        while len(available_indices) > 0:
-            current_indices = available_indices[:batch_size]
-            available_indices = available_indices[batch_size:]
-            data = self.merge_strategy_x.resolve(dataset_x.subset(list(map(str, current_indices))).get_data())[0]
+        while len(row_names) > 0:
+            current_indices = row_names[:batch_size]
+            row_names = row_names[batch_size:]
+            data = list(map(lambda x: np.stack(x), zip(*[dataset_x.get_by_row_name(row_name)
+                                                         for row_name in current_indices])))
+            data = self.merge_strategy_x.resolve(data)[0]
             y_pred = self.get_model_prediction(data)
             y_preds.append(y_pred)
 

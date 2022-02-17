@@ -31,7 +31,8 @@ class AbstractBaseModel(ArgumentDictionary):
         self.outputs = outputs
 
     @abstractmethod
-    def predict(self, dataset_x: AbstractDataSource, batch_size: int = 256) -> List[np.ndarray]:
+    def predict(self, dataset_x: AbstractDataSource, batch_size: int = 256,
+                row_names: List[AnyStr] = None) -> List[np.ndarray]:
         """
         Produces model predictions for a given dataset. Can be run in batched mode to limit peak memory usage.
 
@@ -39,6 +40,7 @@ class AbstractBaseModel(ArgumentDictionary):
             dataset_x: The dataset co-variates upon which to predict. Shape [N, ...] where N = number of samples.
             batch_size: If len(dataset_x) is larger than __batch_size__ multiple batches will be evaluated to limit
                         peak memory usage.
+            row_names: List of row names to query in dataset_x (Default: None, all dataset_x row names will be queried)
 
         Returns:
             Model predictions. List of arrays with shape [N, ...] where N = number of samples in __dataset_x__.

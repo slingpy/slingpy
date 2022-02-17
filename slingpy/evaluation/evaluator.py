@@ -29,7 +29,7 @@ class Evaluator(object):
     def evaluate(model: AbstractBaseModel, dataset_x: AbstractDataSource, dataset_y: AbstractDataSource,
                  metrics: List[AbstractMetric], set_name="Test set", with_print=True, threshold: Optional[float] = None,
                  batch_size: int = 256):
-        y_pred = model.predict(dataset_x, batch_size=batch_size)
+        y_pred = model.predict(dataset_x, batch_size=batch_size, row_names=dataset_y.get_row_names())
         y_true = dataset_y.get_data()
 
         assert len(y_pred) == len(y_true), "The evaluated model must have same number as outputs as in the target data."

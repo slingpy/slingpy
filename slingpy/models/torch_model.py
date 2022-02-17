@@ -89,17 +89,20 @@ class TorchModel(TarfileSerialisationBaseModel):
             y_pred = self.target_transformer.inverse_transform(y_pred)
         return y_pred
 
-    def predict(self, dataset_x: AbstractDataSource, batch_size: int = 256) -> List[np.ndarray]:
+    def predict(self, dataset_x: AbstractDataSource, batch_size: int = 256,
+                row_names: List[AnyStr] = None) -> List[np.ndarray]:
         if self.model is None:
             self.model = self.build()
+        if row_names is None:
+            row_names = dataset_x.get_row_names()
 
         self.model.eval()
-        available_indices = dataset_x.get_row_names()
         all_ids, y_preds, y_trues = [], [], []
-        while len(available_indices) > 0:
-            current_indices = available_indices[:batch_size]
-            available_indices = available_indices[batch_size:]
-            data = dataset_x.subset(list(map(str, current_indices))).get_data()
+        while len(row_names) > 0:
+            current_indices = row_names[:batch_size]
+            row_names = row_names[batch_size:]
+            data = list(map(lambda x: np.stack(x), zip(*[dataset_x.get_by_row_name(row_name)
+                                                         for row_name in current_indices])))
             data = list(map(torch.from_numpy, data))
             y_pred = self.get_model_prediction(data)
             y_preds.append(y_pred)
