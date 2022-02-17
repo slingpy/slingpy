@@ -75,13 +75,15 @@ class AbstractRunPolicy(ArgumentDictionary):
         return False
 
     @staticmethod
-    def run_with_file_output(inputs: Tuple[int, Dict], base_policy: "AbstractRunPolicy") -> Tuple[int, AnyStr]:
+    def run_with_file_output(inputs: Tuple[int, Dict], base_policy: "AbstractRunPolicy",
+                             is_parallel: bool = True) -> Tuple[int, AnyStr]:
         """
         Runnable wrapper static function for use with __functools.partial__ and pool executors.
 
         Args:
             inputs: The inputs consisting of the run index and arguments.
             base_policy: The base policy to execute.
+            is_parallel: Whether this job is being executed in a subprocess (for exception capture).
 
         Returns:
             A tuple consisting of the run index and a filepath to the results file (as __RunResultWithMetaData__)
@@ -97,7 +99,10 @@ class AbstractRunPolicy(ArgumentDictionary):
         try:
             run_results_w_metadata = base_policy.run(**kwargs)
         except Exception as e:
-            run_results_w_metadata = e  # Propagate exceptions to the handler.
+            if is_parallel:
+                run_results_w_metadata = e  # Propagate exceptions to the handler.
+            else:
+                raise  # Re-raise if not in subprocess.
 
         tmp_result_file_path = os.path.join(tmp_results_dir, "results.pickle")
         with open(tmp_result_file_path, "wb") as fp:

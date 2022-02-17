@@ -100,13 +100,17 @@ class CompositeRunPolicy(AbstractRunPolicy):
 
         if not self.run_parallel:
             result_dicts = list(map(
-                partial(AbstractRunPolicy.run_with_file_output, base_policy=self.base_policy),
+                partial(AbstractRunPolicy.run_with_file_output,
+                        base_policy=self.base_policy,
+                        is_parallel=self.run_parallel),
                 zip(range(len(all_kwargs)), all_kwargs)
             ))
         else:
             with Pool(processes=num_processes) as pool:
                 result_dicts = list(pool.imap_unordered(
-                    partial(AbstractRunPolicy.run_with_file_output, base_policy=self.base_policy),
+                    partial(AbstractRunPolicy.run_with_file_output,
+                            base_policy=self.base_policy,
+                            is_parallel=self.run_parallel),
                     zip(range(len(all_kwargs)), all_kwargs),
                     chunksize=1
                 ))
@@ -121,10 +125,9 @@ class CompositeRunPolicy(AbstractRunPolicy):
 
         all_exceptions = self.handle_child_process_exceptions(all_kwargs, run_results)
         if len(all_exceptions) != 0:
-            error(
-                f"There were {len(all_exceptions)} exceptions in subprocesses. Re-raising the last error."
-            )
-            raise all_exceptions[-1][1]
+            error_msg = f"There were {len(all_exceptions)} exceptions in subprocesses. Re-raising the last error."
+            error(error_msg)
+            raise Exception(error_msg) from all_exceptions[-1][1]
 
         for result_dict_path in result_dict_paths:
             # Remove references from disk after aggregation.
