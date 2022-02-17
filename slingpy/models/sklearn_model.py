@@ -59,8 +59,7 @@ class SklearnModel(PickleableBaseModel):
         while len(row_names) > 0:
             current_indices = row_names[:batch_size]
             row_names = row_names[batch_size:]
-            data = list(map(lambda x: np.stack(x), zip(*[dataset_x.get_by_row_name(row_name)
-                                                         for row_name in current_indices])))
+            data = dataset_x.get_data(current_indices)
             data = self.merge_strategy_x.resolve(data)[0]
             y_pred = self.get_model_prediction(data)
             y_preds.append(y_pred)
@@ -77,8 +76,10 @@ class SklearnModel(PickleableBaseModel):
         if self.model is None:
             self.model = self.build()
 
-        x, y = self.merge_strategy_x.resolve(train_x.get_data())[0], None
+        label_row_names = train_y.get_row_names()
+
+        x, y = self.merge_strategy_x.resolve(train_x.get_data(label_row_names))[0], None
         if train_y is not None:
-            y = self.merge_strategy_y.resolve(train_y.get_data())[0]
+            y = self.merge_strategy_y.resolve(train_y.get_data(label_row_names))[0]
         self.model.fit(x, y=y)
         return self

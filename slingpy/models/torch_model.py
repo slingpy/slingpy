@@ -101,8 +101,7 @@ class TorchModel(TarfileSerialisationBaseModel):
         while len(row_names) > 0:
             current_indices = row_names[:batch_size]
             row_names = row_names[batch_size:]
-            data = list(map(lambda x: np.stack(x), zip(*[dataset_x.get_by_row_name(row_name)
-                                                         for row_name in current_indices])))
+            data = dataset_x.get_data(current_indices)
             data = list(map(torch.from_numpy, data))
             y_pred = self.get_model_prediction(data)
             y_preds.append(y_pred)

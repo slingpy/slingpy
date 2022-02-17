@@ -84,7 +84,7 @@ class AbstractDataSource(ArgumentDictionary):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_data(self) -> List[np.ndarray]:
+    def _get_data(self) -> List[np.ndarray]:
         """
         Returns:
             The entire dataset loaded into memory as a list of __np.ndarray__s. Note that this operation may require a
@@ -92,6 +92,23 @@ class AbstractDataSource(ArgumentDictionary):
             accessed individually by index or name instead.
         """
         raise NotImplementedError()
+
+    def get_data(self, row_names: Optional[List[AnyStr]] = None) -> List[np.ndarray]:
+        """
+        Args:
+            row_names: The row names of the items to be retrieved (Default: None, i.e. all data is returned).
+
+        Returns:
+            The queried dataset loaded into memory as a list of __np.ndarray__s. Note that this operation may require a
+            large amount of memory. Where possible, this operation should therefore be avoided and entries should be
+            accessed individually by index or name instead.
+        """
+        if row_names:
+            ret_val = list(map(lambda x: np.stack(x), zip(*[self.get_by_row_name(row_name)
+                                                            for row_name in row_names])))
+            return ret_val
+        else:
+            return self._get_data()
 
     @abstractmethod
     def get_by_row_name(self, row_name: AnyStr) -> List[np.ndarray]:

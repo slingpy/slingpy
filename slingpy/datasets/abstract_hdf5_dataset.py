@@ -202,8 +202,8 @@ class AbstractHDF5Dataset(AbstractRunPolicy, AbstractDataSource):
     def get_shape(self) -> List[Tuple[Union[Optional[int]]]]:
         return self.get_data_source().get_shape()
 
-    def get_data(self) -> List[np.ndarray]:
-        return self.get_data_source().get_data()
+    def _get_data(self) -> List[np.ndarray]:
+        return self.get_data_source()._get_data()
 
     def get_by_row_name(self, row_name: AnyStr) -> List[np.ndarray]:
         return self.get_data_source().get_by_row_name(row_name)

@@ -157,7 +157,7 @@ class HDF5DataSource(AbstractDataSource):
         hd5_file = self._get_file_cache()
         return hd5_file.attrs[HDF5DataSource.DATASET_VERSION]
 
-    def get_data(self) -> List[np.ndarray]:
+    def _get_data(self) -> List[np.ndarray]:
         hd5_file = self._get_file_cache()
         x = hd5_file[HDF5DataSource.COVARIATES_KEY]
         included_indices = np.array([self.included_indices[index] for index in range(len(self))])

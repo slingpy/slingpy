@@ -47,7 +47,7 @@ class CompositeDataSource(AbstractDataSource):
             shapes += data_source.get_shape()
         return shapes
 
-    def get_data(self) -> List[np.ndarray]:
+    def _get_data(self) -> List[np.ndarray]:
         all_data = [self[idx] for idx in range(len(self))]
         all_data = list(map(lambda x: np.stack(x), zip(*all_data)))
         assert np.alltrue(np.equal(list(map(len, all_data)), len(self))), \
