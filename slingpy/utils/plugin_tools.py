@@ -36,8 +36,8 @@ class PluginTools(object):
             modname = module_name_prefix + os.path.basename(path)[:-3]
             spec = importlib.util.spec_from_file_location(modname, path)
             module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
             new_module_encountered_hook(modname, module)
+            spec.loader.exec_module(module)
             for name, obj in inspect.getmembers(module):
                 if inspect.isclass(obj) and all([issubclass(obj, subclass) for subclass in check_for_subclasses]):
                     classes.append(obj)
