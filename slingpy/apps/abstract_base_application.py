@@ -171,7 +171,6 @@ class AbstractBaseApplication(AbstractRunPolicy):
         Get the active run policy, taking into account the current application configuration.
         """
         evaluate_against = self.evaluate_against
-        evaluate_against = "val" if self.hyperopt else evaluate_against
 
         if self.schedule_on_slurm:
             base_run = SlurmSingleRunPolicy(self, app_paths=self.app_paths)
