@@ -17,6 +17,7 @@ DEALINGS IN THE SOFTWARE.
 """
 import os
 import inspect
+import tempfile
 from typing import AnyStr
 from slingpy.utils.auto_argparse import AutoArgparse
 from slingpy.schedulers.abstract_scheduler import AbstractScheduler
@@ -30,11 +31,16 @@ class SlurmScheduler(AbstractScheduler):
 
     @staticmethod
     def execute(clazz, mem_limit_in_mb: int = 2048, num_cpus: int = 1, virtualenv_path: AnyStr = "",
-                time_limit_hours: int = 0, time_limit_days: int = 1,
+                time_limit_hours: int = 0, time_limit_days: int = 1, output_directory: AnyStr = "",
                 project_dir_path: AnyStr = "", exclude: AnyStr = "", **kwargs):
-        output_directory = kwargs["output_directory"]
+        if not output_directory and "output_directory" in kwargs:
+            output_directory = kwargs["output_directory"]
+        if not output_directory:
+            output_directory = tempfile.mkdtemp()
+
         logfile = os.path.join(output_directory, "log.txt")
         err_logfile = os.path.join(output_directory, "errlog.txt")
+
         main_app_path = os.path.abspath(inspect.getfile(clazz))
 
         parser = AutoArgparse.get_parser_for_clazz(clazz)
