@@ -19,10 +19,23 @@ import os
 import six
 import time
 import pickle
+import traceback
 from dataclasses import dataclass
 from abc import ABCMeta, abstractmethod
 from typing import Dict, Any, AnyStr, Tuple, Optional
 from slingpy.utils.argument_dictionary import ArgumentDictionary
+
+
+class TracebackException(Exception):
+    def __init__(self, source_err, tb):
+        self.source_err = source_err
+        self.tb = tb
+
+    def get_source_error(self):
+        return self.source_err
+
+    def get_traceback(self):
+        return self.tb
 
 
 @dataclass
@@ -100,7 +113,8 @@ class AbstractRunPolicy(ArgumentDictionary):
             run_results_w_metadata = base_policy.run(**kwargs)
         except Exception as e:
             if is_parallel:
-                run_results_w_metadata = e  # Propagate exceptions to the handler.
+                # Propagate exceptions to the handler.
+                run_results_w_metadata = TracebackException(e, traceback.format_exc())
             else:
                 raise  # Re-raise if not in subprocess.
 

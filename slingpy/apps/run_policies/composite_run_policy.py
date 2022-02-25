@@ -17,14 +17,14 @@ DEALINGS IN THE SOFTWARE.
 """
 import os
 import pickle
-import traceback
 from typing import List, Dict
 from functools import partial
 from abc import abstractmethod
 from slingpy.utils.logging import error
 from slingpy.apps.app_paths import AppPaths
 from slingpy.utils.nestable_pool import NestablePool as Pool
-from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult, RunResultWithMetaData
+from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult, RunResultWithMetaData, \
+    TracebackException
 
 
 class CompositeRunPolicy(AbstractRunPolicy):
@@ -83,9 +83,9 @@ class CompositeRunPolicy(AbstractRunPolicy):
     def handle_child_process_exceptions(self, arg_list, ordered_outputs):
         all_exceptions = []
         for args, outputs in zip(arg_list, ordered_outputs):
-            if isinstance(outputs, Exception):
+            if isinstance(outputs, TracebackException):
                 error("Run args were:", args)
-                error(traceback.format_exception(None, outputs, outputs.__traceback__))
+                error(outputs.get_traceback())
                 error(outputs)
                 all_exceptions.append([args, outputs])
         return all_exceptions
