@@ -33,11 +33,11 @@ class SlurmScheduler(AbstractScheduler):
     def execute(clazz, mem_limit_in_mb: int = 2048, num_cpus: int = 1, virtualenv_path: AnyStr = "",
                 time_limit_hours: int = 0, time_limit_days: int = 1, output_directory: AnyStr = "",
                 project_dir_path: AnyStr = "", exclude: AnyStr = "", **kwargs):
-        if not output_directory and "output_directory" in kwargs:
-            output_directory = kwargs["output_directory"]
         if not output_directory:
             output_directory = tempfile.mkdtemp()
-
+        
+        kwargs = {"output_directory": output_directory, **kwargs}
+        
         logfile = os.path.join(output_directory, "log.txt")
         err_logfile = os.path.join(output_directory, "errlog.txt")
 
