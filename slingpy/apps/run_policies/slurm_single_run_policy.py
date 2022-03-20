@@ -54,18 +54,16 @@ class SlurmSingleRunPolicy(AbstractRunPolicy):
                                                         mem_limit_in_mb=mem_limit_in_mb,
                                                         virtualenv_path=virtualenv_path,
                                                         project_dir_path=self.app_paths.project_root_directory,
-                                                        **kwargs)
+                                                        output_directory=output_directory,
+                                                        program_arguments=kwargs)
         contents = contents.rstrip()
         err_contents = err_contents.rstrip()
         
         if contents:
-            # Indent logs so that they're distinctive from this process's logs
-            contents = '\n'.join('  ' + line for line in contents.split('\n'))
-            print('stdout:')
+            contents = '\n'.join('[SLURM]' + line for line in contents.split('\n'))
             print(contents, file=sys.stdout, flush=True)
         if err_contents:
-            err_contents = '\n'.join('  ' + line for line in err_contents.split('\n'))
-            print('stderr:')
+            err_contents = '\n'.join('[SLURM]' + line for line in err_contents.split('\n'))
             print(err_contents, file=sys.stderr, flush=True)
         eval_score = MetricDictTools.load_metric_dict(self.app_paths.get_eval_score_dict_path(output_directory))
         test_score = MetricDictTools.load_metric_dict(self.app_paths.get_test_score_dict_path(output_directory))

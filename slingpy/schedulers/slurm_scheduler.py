@@ -18,7 +18,7 @@ DEALINGS IN THE SOFTWARE.
 import os
 import inspect
 import tempfile
-from typing import AnyStr
+from typing import AnyStr, Dict
 from slingpy.utils.auto_argparse import AutoArgparse
 from slingpy.schedulers.abstract_scheduler import AbstractScheduler
 
@@ -32,9 +32,11 @@ class SlurmScheduler(AbstractScheduler):
     @staticmethod
     def execute(clazz, mem_limit_in_mb: int = 2048, num_cpus: int = 1, virtualenv_path: AnyStr = "",
                 time_limit_hours: int = 0, time_limit_days: int = 1, output_directory: AnyStr = "",
-                project_dir_path: AnyStr = "", exclude: AnyStr = "", **kwargs):
-        if not output_directory and "output_directory" in kwargs:
-            output_directory = kwargs["output_directory"]
+                project_dir_path: AnyStr = "", exclude: AnyStr = "", program_arguments: Dict = None):
+        if program_arguments is None:
+            program_arguments = {}
+        if not output_directory and "output_directory" in program_arguments:
+            output_directory = program_arguments["output_directory"]
         if not output_directory:
             output_directory = tempfile.mkdtemp()
         
@@ -45,7 +47,7 @@ class SlurmScheduler(AbstractScheduler):
 
         parser = AutoArgparse.get_parser_for_clazz(clazz)
         argument_list = AbstractScheduler.convert_arguments_dict_to_program_argument_string(
-            parser, kwargs,
+            parser, program_arguments,
             # Exclude re-scheduling to prevent infinite recursion.
             exclude={"schedule_on_slurm"}
         )
