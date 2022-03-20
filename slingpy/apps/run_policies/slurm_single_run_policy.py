@@ -67,7 +67,9 @@ class SlurmSingleRunPolicy(AbstractRunPolicy):
             print(err_contents, file=sys.stderr, flush=True)
         eval_score = MetricDictTools.load_metric_dict(self.app_paths.get_eval_score_dict_path(output_directory))
         test_score = MetricDictTools.load_metric_dict(self.app_paths.get_test_score_dict_path(output_directory))
-        model_path = self.app_paths.get_model_file_path(output_directory, self.base_policy.get_model_file_path())
+        model_path = self.app_paths.get_model_file_path(output_directory,
+                                                        extension=
+                                                        self.base_policy.get_model().get_save_file_extension())
         return RunResult(validation_scores=eval_score, test_scores=test_score, model_path=model_path)
 
     def is_async_run_policy(self):
