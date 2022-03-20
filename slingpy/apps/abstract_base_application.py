@@ -150,7 +150,7 @@ class AbstractBaseApplication(AbstractRunPolicy):
         info("Running version", self.version_string)
         info("Running at", str(datetime.now()))
 
-        self.datasets = DatasetHolder()
+        self.datasets = None
         self.app_paths = self.get_app_paths()
         self.run_policy = self.get_run_policy()
         self.setup()
@@ -435,6 +435,13 @@ class AbstractBaseApplication(AbstractRunPolicy):
         self.cleanup()
         return run_result
 
+    def init_data(self):
+        if not self.datasets:
+            datasets = self.load_data()
+            self.datasets = DatasetHolder()
+            for name, data_source in datasets.items():
+                setattr(self.datasets, name, data_source)
+
     def run_single(self, **kwargs) -> RunResult:
         """ Executes a single run directly (disregarding any __self.run_policy__ that may be in place. """
         prior_args = kwargs
@@ -444,10 +451,7 @@ class AbstractBaseApplication(AbstractRunPolicy):
 
         output_directory = self.output_directory
 
-        datasets = self.load_data()
-        for name, data_source in datasets.items():
-            setattr(self.datasets, name, data_source)
-
+        self.init_data()
         model = self.get_model()
         model = self.train_model(model)
         if model is not None:
