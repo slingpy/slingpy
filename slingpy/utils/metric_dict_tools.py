@@ -82,9 +82,6 @@ class MetricDictTools(object):
         Returns:
             The loaded metric dictionary.
         """
-        if not os.path.isfile(file_path):
-            return None
-
         with open(file_path, "rb") as fp:
             score_dict = pickle.load(fp)
             return score_dict

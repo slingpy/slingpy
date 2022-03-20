@@ -55,9 +55,18 @@ class SlurmSingleRunPolicy(AbstractRunPolicy):
                                                         virtualenv_path=virtualenv_path,
                                                         project_dir_path=self.app_paths.project_root_directory,
                                                         **kwargs)
-
-        print(contents, end="", file=sys.stdout)  # Redirect to stdout.
-        print(contents, end="", file=sys.stderr, flush=True)  # Redirect to stdout.
+        contents = contents.rstrip()
+        err_contents = err_contents.rstrip()
+        
+        if contents:
+            # Indent logs so that they're distinctive from this process's logs
+            contents = '\n'.join('  ' + line for line in contents.split('\n'))
+            print('stdout:')
+            print(contents, file=sys.stdout, flush=True)
+        if err_contents:
+            err_contents = '\n'.join('  ' + line for line in err_contents.split('\n'))
+            print('stderr:')
+            print(err_contents, file=sys.stderr, flush=True)
         eval_score = MetricDictTools.load_metric_dict(self.app_paths.get_eval_score_dict_path(output_directory))
         test_score = MetricDictTools.load_metric_dict(self.app_paths.get_test_score_dict_path(output_directory))
         model_path = self.app_paths.get_model_file_path(output_directory, TorchModel.get_save_file_extension())
