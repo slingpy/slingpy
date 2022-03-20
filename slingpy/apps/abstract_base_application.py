@@ -243,9 +243,23 @@ class AbstractBaseApplication(AbstractRunPolicy):
         raise NotImplementedError()
 
     @abstractmethod
-    def train_model(self) -> Optional[AbstractBaseModel]:
+    def get_model(self) -> AbstractBaseModel:
+
+        """
+        Instantiate a machine learning model.
+
+        Returns:
+            An instantiated base model.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def train_model(self, model: AbstractBaseModel) -> Optional[AbstractBaseModel]:
         """
         Train a machine learning model.
+
+        Args:
+            model: The model to be trained.
 
         Returns:
             A trained base model and the training meta data.
@@ -307,7 +321,7 @@ class AbstractBaseApplication(AbstractRunPolicy):
 
                     if threshold is not None:
                         thresholded_file_path = self.get_thresholded_prediction_file_path(
-                            dataset_name, extension=self.save_predictions_file_format
+                            dataset_name, extension=self.save_predictions_file_format, output_index=output_idx
                         )
                         self.save_predictions_with_format(thresholded_file_path,
                                                           data=(output_i > threshold).astype(int),
@@ -391,7 +405,9 @@ class AbstractBaseApplication(AbstractRunPolicy):
     def get_model_folder_path(self) -> AnyStr:
         return self.app_paths.get_model_folder_path(output_directory=self.output_directory)
 
-    def get_model_file_path(self, extension: AnyStr) -> AnyStr:
+    def get_model_file_path(self, extension: AnyStr = None) -> AnyStr:
+        if extension is None:
+            extension = self.get_model().get_save_file_extension()
         return self.app_paths.get_model_file_path(output_directory=self.output_directory,
                                                   extension=extension)
 
@@ -432,9 +448,10 @@ class AbstractBaseApplication(AbstractRunPolicy):
         for name, data_source in datasets.items():
             setattr(self.datasets, name, data_source)
 
-        model = self.train_model()
+        model = self.get_model()
+        model = self.train_model(model)
         if model is not None:
-            model_path = self.get_model_file_path(model.get_save_file_extension())
+            model_path = self.get_model_file_path(extension=model.get_save_file_extension())
             model.save(model_path)
         else:
             model_path = None

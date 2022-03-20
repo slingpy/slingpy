@@ -1,7 +1,7 @@
 # slingpy
 
 ![Python version](https://img.shields.io/badge/Python-3.8-blue)
-![Library version](https://img.shields.io/badge/Version-0.1.0-blue)
+![Library version](https://img.shields.io/badge/Version-0.2.0-blue)
 
 The `slingpy` python package provides starter code for structured, reproducible and maintainable machine learning
 projects. `slingpy` aims to be maximally extensible while maintaining sensible defaults. It is agnostic in terms of modelling backend

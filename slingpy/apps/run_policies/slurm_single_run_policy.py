@@ -60,14 +60,14 @@ class SlurmSingleRunPolicy(AbstractRunPolicy):
         err_contents = err_contents.rstrip()
         
         if contents:
-            contents = '\n'.join('[SLURM]' + line for line in contents.split('\n'))
+            contents = '\n'.join('[SLURM] ' + line for line in contents.split('\n'))
             print(contents, file=sys.stdout, flush=True)
         if err_contents:
-            err_contents = '\n'.join('[SLURM]' + line for line in err_contents.split('\n'))
+            err_contents = '\n'.join('[SLURM] ' + line for line in err_contents.split('\n'))
             print(err_contents, file=sys.stderr, flush=True)
         eval_score = MetricDictTools.load_metric_dict(self.app_paths.get_eval_score_dict_path(output_directory))
         test_score = MetricDictTools.load_metric_dict(self.app_paths.get_test_score_dict_path(output_directory))
-        model_path = self.app_paths.get_model_file_path(output_directory, TorchModel.get_save_file_extension())
+        model_path = self.app_paths.get_model_file_path(output_directory, self.base_policy.get_model_file_path())
         return RunResult(validation_scores=eval_score, test_scores=test_score, model_path=model_path)
 
     def is_async_run_policy(self):
