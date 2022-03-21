@@ -33,5 +33,6 @@ class AreaUnderTheCurve(AbstractMetric):
 
     def evaluate(self, y_pred: np.ndarray, y_true: np.ndarray, threshold: Optional[float] = None) -> np.ndarray:
         if y_pred.shape[1] == 2:
+            # we assume the prediction of the larger class are stored in the second column
             y_pred = y_pred[:,1]
         return np.asarray(roc_auc_score(y_true[:, 0], y_pred, multi_class="ovr", average="weighted"))
