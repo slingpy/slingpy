@@ -435,11 +435,10 @@ class AbstractBaseApplication(AbstractRunPolicy):
         return run_result
 
     def init_data(self):
-        if not self.datasets:
-            datasets = self.load_data()
-            self.datasets = DatasetHolder()
-            for name, data_source in datasets.items():
-                setattr(self.datasets, name, data_source)
+        datasets = self.load_data()
+        self.datasets = DatasetHolder()
+        for name, data_source in datasets.items():
+            setattr(self.datasets, name, data_source)
 
     def run_single(self, **kwargs) -> RunResult:
         """ Executes a single run directly (disregarding any __self.run_policy__ that may be in place. """
