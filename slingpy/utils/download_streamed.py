@@ -46,11 +46,15 @@ def download_streamed(
                         fp.write(chunk)
             except:
                 # Clean up partial download if there was an error
-                os.unlink(local_save_file_path)
+                try:
+                    os.unlink(tmp_file)
+                except:
+                    pass
                 raise
 
             if skip_if_exists and os.path.exists(local_save_file_path):
-                # Another cluster process already finished the download
-                os.unlink(local_save_file_path)
+                # Another parallel process already successfully finished the
+                # download - keep the earlier copy.
+                os.unlink(tmp_file)
             else:
                 os.rename(tmp_file, local_save_file_path)
