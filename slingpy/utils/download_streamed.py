@@ -15,13 +15,22 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+import os
+
 import requests
 
-
-def download_streamed(download_url, local_save_file_path, chunk_size=4096):
+def download_streamed(download_url, local_save_file_path, chunk_size=2**20):
     with requests.get(download_url, stream=True) as request:
         request.raise_for_status()
+        tmp_file = str(local_save_file_path) + ".download"
 
-        with open(local_save_file_path, "wb") as fp:
-            for chunk in request.iter_content(chunk_size=chunk_size):
-                fp.write(chunk)
+        try:
+            with open(tmp_file, "wb") as fp:
+                for chunk in request.iter_content(chunk_size=chunk_size):
+                    fp.write(chunk)
+        except:
+            # Clean up partial download if there was an error
+            os.unlink(local_save_file_path)
+            raise
+
+        os.rename(tmp_file, local_save_file_path)
