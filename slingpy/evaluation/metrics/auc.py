@@ -32,6 +32,7 @@ class AreaUnderTheCurve(AbstractMetric):
     def get_abbreviation(self) -> AnyStr:
         return f"AUC_{self.multi_class}"
 
+
     def evaluate(
         self, y_pred: np.ndarray, y_true: np.ndarray, threshold: Optional[float] = None
     ) -> np.ndarray:
