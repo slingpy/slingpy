@@ -16,21 +16,41 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
+import uuid
 
 import requests
+from ilock import ILock
 
-def download_streamed(download_url, local_save_file_path, chunk_size=2**20):
-    with requests.get(download_url, stream=True) as request:
-        request.raise_for_status()
-        tmp_file = str(local_save_file_path) + ".download"
 
-        try:
-            with open(tmp_file, "wb") as fp:
-                for chunk in request.iter_content(chunk_size=chunk_size):
-                    fp.write(chunk)
-        except:
-            # Clean up partial download if there was an error
-            os.unlink(local_save_file_path)
-            raise
+def download_streamed(
+    download_url,
+    local_save_file_path,
+    chunk_size=2**20,
+    skip_if_exists=True,
+):
+    with ILock(f"download_streamed_{local_save_file_path}"):
+        if skip_if_exists and os.path.exists(local_save_file_path):
+            return
 
-        os.rename(tmp_file, local_save_file_path)
+        with requests.get(download_url, stream=True) as request:
+            request.raise_for_status()
+            # Use a temp file for downloading so that even a SIGKILL'd process
+            # won't leave a partial download with the destination filename.
+            # Also make it unique, so that it can't be corrupted by parallel processes
+            # that can't share locks (e.g. cluster jobs with local /tmp folders)
+            tmp_file = str(local_save_file_path) + f".download{uuid.uuid4().hex}"
+
+            try:
+                with open(tmp_file, "wb") as fp:
+                    for chunk in request.iter_content(chunk_size=chunk_size):
+                        fp.write(chunk)
+            except:
+                # Clean up partial download if there was an error
+                os.unlink(local_save_file_path)
+                raise
+
+            if skip_if_exists and os.path.exists(local_save_file_path):
+                # Another cluster process already finished the download
+                os.unlink(local_save_file_path)
+            else:
+                os.rename(tmp_file, local_save_file_path)
