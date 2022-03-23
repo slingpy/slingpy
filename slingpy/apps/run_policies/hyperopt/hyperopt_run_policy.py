@@ -197,7 +197,10 @@ class HyperoptRunPolicy(CompositeRunPolicy):
                                          self.app_paths.get_test_score_dict_path(output_directory))
 
         if len(score_dicts) != 0:
-            model_path = os.path.join(final_output_directory, os.path.split(model_paths[self.best_score_index])[-1])
+            root_size = len(best_output_directory.split(os.path.sep))
+            path_postfix = model_paths[self.best_score_index].split(os.path.sep)[root_size:]
+            path_postfix = os.path.sep.join(path_postfix)
+            model_path = os.path.join(final_output_directory, path_postfix)
             return RunResult(validation_scores=score_dicts[self.best_score_index],
                              test_scores=test_score_dicts[self.best_score_index],
                              model_path=model_path)
