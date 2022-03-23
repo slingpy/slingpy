@@ -29,8 +29,10 @@ class MeanAbsoluteError(AbstractMetric):
     def get_abbreviation(self) -> AnyStr:
         return "MAE"
 
-    def evaluate(self, y_pred: np.ndarray, y_true: np.ndarray, threshold: Optional[float] = None) -> np.ndarray:
+    def evaluate(
+        self, y_pred: np.ndarray, y_true: np.ndarray, threshold: Optional[float] = None
+    ) -> np.ndarray:
         if y_pred.shape[1] == 2:
             # we assume the prediction of the larger class are stored in the second column
-            y_pred = y_pred[:,1]
+            y_pred = y_pred[:, 1]
         return mean_absolute_error(y_true, y_pred)
