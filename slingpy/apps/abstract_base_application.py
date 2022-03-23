@@ -17,7 +17,6 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import sys
 import six
 import shutil
 import pickle
@@ -463,7 +462,8 @@ class AbstractBaseApplication(AbstractRunPolicy):
         args_file_path = self.app_paths.get_args_file_path(output_directory)
 
         info("Saving args to", args_file_path)
-        pickle.dump(self.get_params(), open(args_file_path, "wb"), pickle.HIGHEST_PROTOCOL)
+        with open(args_file_path, "wb") as fp:
+            pickle.dump(self.get_params(), fp, pickle.HIGHEST_PROTOCOL)
 
         eval_score, test_score, threshold = None, None, None
         if self.evaluate:
@@ -475,7 +475,11 @@ class AbstractBaseApplication(AbstractRunPolicy):
         MetricDictTools.save_metric_dict(eval_score, self.app_paths.get_eval_score_dict_path(output_directory))
         MetricDictTools.save_metric_dict(test_score, self.app_paths.get_test_score_dict_path(output_directory))
         self.set_params(**prior_args)
-        return RunResult(validation_scores=eval_score, test_scores=test_score, model_path=model_path)
+        result = RunResult(validation_scores=eval_score, test_scores=test_score, model_path=model_path)
+        results_file_path = self.app_paths.get_run_results_path(output_directory)
+        with open(results_file_path, "wb") as fp:
+            pickle.dump(result, fp, pickle.HIGHEST_PROTOCOL)
+        return result
 
 
 if __name__ == "__main__":

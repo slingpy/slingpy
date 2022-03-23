@@ -18,9 +18,8 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import print_function
 
 import sys
+import pickle
 from slingpy.apps.app_paths import AppPaths
-from slingpy.models.torch_model import TorchModel
-from slingpy.utils.metric_dict_tools import MetricDictTools
 from slingpy.schedulers.slurm_scheduler import SlurmScheduler
 from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult
 
@@ -65,14 +64,11 @@ class SlurmSingleRunPolicy(AbstractRunPolicy):
         if err_contents:
             err_contents = '\n'.join('[SLURM] ' + line for line in err_contents.split('\n'))
             print(err_contents, file=sys.stderr, flush=True)
-        eval_score = MetricDictTools.load_metric_dict(self.app_paths.get_eval_score_dict_path(output_directory))
-        test_score = MetricDictTools.load_metric_dict(self.app_paths.get_test_score_dict_path(output_directory))
 
-        self.base_policy.init_data()  # Initialize app data if not yet initialized.
-        model_path = self.app_paths.get_model_file_path(output_directory,
-                                                        extension=
-                                                        self.base_policy.get_model().get_save_file_extension())
-        return RunResult(validation_scores=eval_score, test_scores=test_score, model_path=model_path)
+        run_results_path = self.app_paths.get_run_results_path(output_directory)
+        with open(run_results_path, "rb") as fp:
+            run_result = pickle.load(fp)
+            return run_result
 
     def is_async_run_policy(self):
         return True

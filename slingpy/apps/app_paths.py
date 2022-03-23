@@ -47,6 +47,10 @@ class AppPaths(object):
         return os.path.join(output_directory, "test_score.pickle")
 
     @staticmethod
+    def get_run_results_path(output_directory: AnyStr) -> AnyStr:
+        return os.path.join(output_directory, "run_results.pickle")
+
+    @staticmethod
     def get_model_folder_path(output_directory: AnyStr) -> AnyStr:
         return os.path.join(output_directory, "model")
 
