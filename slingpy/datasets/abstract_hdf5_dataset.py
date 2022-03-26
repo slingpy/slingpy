@@ -140,7 +140,7 @@ class AbstractHDF5Dataset(AbstractRunPolicy, AbstractDataSource):
         ignored_params = self.get_ignored_param_names()
         folder_path = os.path.join(self.save_directory, f"{type(self).__name__}_"
                                                         f"{self.get_params_hash(ignored_params)}")
-        with ILock(folder_path):
+        with ILock(folder_path, lock_directory=folder_path):
             if not os.path.exists(folder_path):
                 PathTools.mkdir_if_not_exists(folder_path)
 

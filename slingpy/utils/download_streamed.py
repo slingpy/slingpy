@@ -17,7 +17,7 @@ DEALINGS IN THE SOFTWARE.
 """
 import os
 import uuid
-
+import pathlib
 import requests
 from ilock import ILock
 
@@ -28,7 +28,11 @@ def download_streamed(
     chunk_size=2**20,
     skip_if_exists=True,
 ):
-    with ILock(f"download_streamed_{local_save_file_path}"):
+    file_path = pathlib.Path(local_save_file_path)
+    if not file_path.is_file():
+        raise AssertionError(f"local_save_file_path must be a file. {local_save_file_path} is not a file.")
+    local_file_directory = file_path.parent
+    with ILock(f"download_streamed_{local_save_file_path}", lock_directory=local_file_directory):
         if skip_if_exists and os.path.exists(local_save_file_path):
             return
 
