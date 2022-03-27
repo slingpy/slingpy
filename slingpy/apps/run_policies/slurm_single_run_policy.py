@@ -17,6 +17,7 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import print_function
 
+import os
 import sys
 import pickle
 from slingpy.apps.app_paths import AppPaths
@@ -55,15 +56,16 @@ class SlurmSingleRunPolicy(AbstractRunPolicy):
                                                         project_dir_path=self.app_paths.project_root_directory,
                                                         output_directory=output_directory,
                                                         program_arguments=kwargs)
-        contents = contents.rstrip()
-        err_contents = err_contents.rstrip()
-        
-        if contents:
-            contents = '\n'.join('[SLURM] ' + line for line in contents.split('\n'))
-            print(contents, file=sys.stdout, flush=True)
-        if err_contents:
-            err_contents = '\n'.join('[SLURM] ' + line for line in err_contents.split('\n'))
-            print(err_contents, file=sys.stderr, flush=True)
+
+        if os.path.isfile(contents):
+            with open(contents, "r") as fp:
+                for line in fp:
+                    print(f"[SLURM] {line}", file=sys.stdout)
+
+        if os.path.isfile(err_contents):
+            with open(err_contents, "r") as fp:
+                for line in fp:
+                    print(f"[SLURM] {line}", file=sys.stderr)
 
         run_results_path = self.app_paths.get_run_results_path(output_directory)
         with open(run_results_path, "rb") as fp:

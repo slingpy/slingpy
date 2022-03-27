@@ -36,16 +36,7 @@ class AbstractScheduler(object):
         info(f"Running command: {cmd}")
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         process.communicate()[0].decode("utf-8").strip()  # Propagate outputs to parent process (may be out of order).
-
-        contents = ""
-        if os.path.isfile(logfile):
-            with open(logfile, "r") as fp:
-                contents = fp.read()
-        err_contents = ""
-        if os.path.isfile(err_logfile):
-            with open(err_logfile, "r") as fp:
-                err_contents = fp.read()
-        return contents, err_contents
+        return logfile, err_logfile
 
     @staticmethod
     def convert_arguments_dict_to_program_argument_string(
