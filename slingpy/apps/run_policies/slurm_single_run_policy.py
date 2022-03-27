@@ -60,12 +60,12 @@ class SlurmSingleRunPolicy(AbstractRunPolicy):
         if os.path.isfile(contents):
             with open(contents, "r") as fp:
                 for line in fp:
-                    print(f"[SLURM] {line}", file=sys.stdout)
+                    print(f"[SLURM] {line}", file=sys.stdout, end="")
 
         if os.path.isfile(err_contents):
             with open(err_contents, "r") as fp:
                 for line in fp:
-                    print(f"[SLURM] {line}", file=sys.stderr)
+                    print(f"[SLURM] {line}", file=sys.stderr, end="")
 
         run_results_path = self.app_paths.get_run_results_path(output_directory)
         with open(run_results_path, "rb") as fp:
