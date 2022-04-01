@@ -39,8 +39,8 @@ class AbstractDataSource(ArgumentDictionary):
         for key in d1.keys():
             if key not in d2:
                 return False
-            elif d1[key] != d2[key] and not ((isinstance(d1[key], float) and np.isnan(d1[key])) and
-                                             (isinstance(d2[key], float) and np.isnan(d2[key]))):
+            elif np.any(d1[key] != d2[key]) and not ((isinstance(d1[key], float) and np.isnan(d1[key])) and
+                                                     (isinstance(d2[key], float) and np.isnan(d2[key]))):
                 # Consider (NaN == NaN) = True for dict comparison.
                 return False
         return True
