@@ -19,7 +19,7 @@ import os
 import uuid
 import pathlib
 import requests
-from ilock import ILock
+from slingpy.utils.path_tools import PathTools
 
 
 def download_streamed(
@@ -28,9 +28,9 @@ def download_streamed(
     chunk_size=2**20,
     skip_if_exists=True,
 ):
+    lock_key = f"download_streamed_{local_save_file_path}"
     file_path = pathlib.Path(local_save_file_path)
-    local_file_directory = file_path.parent
-    with ILock(f"download_streamed_{local_save_file_path}", lock_directory=local_file_directory):
+    with PathTools.ilock_nothrow(lock_key, file_path.parent):
         if skip_if_exists and os.path.exists(local_save_file_path):
             return
 

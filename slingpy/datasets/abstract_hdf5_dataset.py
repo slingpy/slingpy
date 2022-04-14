@@ -20,7 +20,6 @@ import glob
 import pickle
 import inspect
 import numpy as np
-from ilock import ILock
 from abc import abstractmethod
 from dataclasses import dataclass
 from slingpy.utils.path_tools import PathTools
@@ -140,7 +139,7 @@ class AbstractHDF5Dataset(AbstractRunPolicy, AbstractDataSource):
         ignored_params = self.get_ignored_param_names()
         folder_path = os.path.join(self.save_directory, f"{type(self).__name__}_"
                                                         f"{self.get_params_hash(ignored_params)}")
-        with ILock(folder_path, lock_directory=self.save_directory):
+        with PathTools.ilock_nothrow(folder_path, self.save_directory):
             if not os.path.exists(folder_path):
                 PathTools.mkdir_if_not_exists(folder_path)
 
