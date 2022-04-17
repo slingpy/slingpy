@@ -16,6 +16,8 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
+from contextlib import contextmanager
+from ilock import ILock
 from slingpy.utils.logging import warn
 
 
@@ -41,3 +43,27 @@ class PathTools(object):
                 raise AssertionError(message)
             else:
                 warn(message)
+
+    @staticmethod
+    @contextmanager
+    def ilock_nothrow(key, lock_directory):
+        """
+        THIS LOCK ISN'T GUARANTEED TO BE EXCLUSIVE ON NFS FILESYSTEMS!
+        File operations aren't immediately propagated, allowing a small window after
+        locking where a parallel processes can also acquire the lock. This allows
+        approx. 1 in 20 processes to enter a lock that is already held, if they all
+        try to acquire the lock simultaneously.
+
+        This wrapper suppresses the FileNotFoundErrors that occur when a contested lock
+        is released.
+        """
+        lock = ILock(key, lock_directory=lock_directory)
+        lock.__enter__()
+        try:
+            yield lock
+        finally:
+            try:
+                lock.__exit__(None, None, None)
+            except FileNotFoundError:
+                # Lockfile is missing - ignore
+                pass
