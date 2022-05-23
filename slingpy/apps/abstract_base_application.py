@@ -111,7 +111,7 @@ class AbstractBaseApplication(AbstractRunPolicy):
             output_directory = tempfile.mkdtemp()
 
         self.output_directory = output_directory
-        """ 
+        """
         The output directory to write results to. If no __output_directory__ is specified, a temporary output directory
         is created to which outputs are written to. The temporary directory is automatically deleted after the run.
         You must specify an __output_directory__ to persist outputs.
@@ -129,19 +129,19 @@ class AbstractBaseApplication(AbstractRunPolicy):
         self.schedule_on_slurm = schedule_on_slurm
         """ Whether or not the code should be scheduled to run on slurm. """
         self.project_root_directory = project_root_directory
-        """ The project root directory containing all custom project code that is not loaded via environment 
+        """ The project root directory containing all custom project code that is not loaded via environment
         dependencies. """
         self.nested_cross_validation = nested_cross_validation
-        """ Whether or not to run nested cross validation. If __False__, cross validation with only one layer is 
+        """ Whether or not to run nested cross validation. If __False__, cross validation with only one layer is
         used. """
         self.remote_execution_num_cpus = remote_execution_num_cpus
-        """ The number of CPUs to request for remote execution. Disregarded if __schedule_on_slurm__ is set to 
+        """ The number of CPUs to request for remote execution. Disregarded if __schedule_on_slurm__ is set to
         false. """
         self.remote_execution_mem_limit_in_mb = remote_execution_mem_limit_in_mb
-        """ The memory (in MB) to rquest for remote execution. Disregarded if __schedule_on_slurm__ is set to 
+        """ The memory (in MB) to rquest for remote execution. Disregarded if __schedule_on_slurm__ is set to
         false. """
         self.remote_execution_virtualenv_path = remote_execution_virtualenv_path
-        """ The virtualenv path to load an environment from for remote execution. Disregarded if __schedule_on_slurm__ 
+        """ The virtualenv path to load an environment from for remote execution. Disregarded if __schedule_on_slurm__
         is set to false. """
         self.remote_execution_time_limit_days = remote_execution_time_limit_days
         """ The execution time limit for remote execution in days. __remote_execution_time_limit_hours__ and

@@ -51,7 +51,7 @@ class CompositeRunPolicy(AbstractRunPolicy):
         self.run_parallel = run_parallel
         """ Whether or not to run the base policy in parallel asynchronous execution or sequentially. """
         self.max_num_parallel_runs = max_num_parallel_runs
-        """ The maximum number of parallel runs that will be executed asynchronously. 
+        """ The maximum number of parallel runs that will be executed asynchronously.
         Only has an effect if __run_parallel__ is set to True. """
         self.total_runtime_in_seconds = 0
 

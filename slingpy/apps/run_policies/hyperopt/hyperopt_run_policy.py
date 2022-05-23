@@ -57,7 +57,7 @@ class HyperoptRunPolicy(CompositeRunPolicy):
         self.exploration_strategy = exploration_strategy
         """ The exploration strategy used. """
         self.max_num_hyperopt_runs = max_num_hyperopt_runs
-        """ Maximum number of hyper-parameter optimization trials to run. 
+        """ Maximum number of hyper-parameter optimization trials to run.
         Note fewer trials are run if the number of all possible combinations of hyper-parameters is smaller than
         __self.max_num_hyperopt_runs__. """
         self.best_score_index = 0

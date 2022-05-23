@@ -61,9 +61,9 @@ class HDF5DataSource(AbstractDataSource):
         self.fill_missing_value = fill_missing_value
         """ Value to use to impute missing return vectors with. Only active if __fill_missing__ is set to True. """
         self.duplicate_merge_strategy = duplicate_merge_strategy
-        """ 
-        Strategy to use to resolve cases where multiple entries exist for a single row name. 
-        By default no resolution is applied and all values are returned. 
+        """
+        Strategy to use to resolve cases where multiple entries exist for a single row name.
+        By default no resolution is applied and all values are returned.
         """
 
         if included_indices is None:

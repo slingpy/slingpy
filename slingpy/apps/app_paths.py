@@ -26,9 +26,9 @@ class AppPaths(object):
 
     def __init__(self, project_root_directory):
         self.project_root_directory = project_root_directory
-        """ 
+        """
         The project's root directory. All custom python packages must either be located in sub-directory of the root
-         directory or must be loaded as a dependency in the current python environment (e.g., in a virtualenv). 
+         directory or must be loaded as a dependency in the current python environment (e.g., in a virtualenv).
         """
 
     @staticmethod
