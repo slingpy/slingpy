@@ -93,8 +93,9 @@ python /project_path/my_application.py --output_directory=/path/to/output/dir
 
 ### Development
 
-Slingpy uses Black and Import Sort, run via [pre-commit](https://pre-commit.com) to ensure consistant code formatting. 
-If making code changes to Slingpy, install the development dependencies and pre-commit git hook with:
+The `slingpy` codebase is formatted with Black and Import Sort to ensure consistant code formatting. 
+These are run through [pre-commit](https://pre-commit.com). 
+If making code changes to `slingpy`, install the development dependencies and pre-commit git hook with:
 
 ```bash
 pip install -r requirements-dev.txt
