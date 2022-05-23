@@ -91,6 +91,16 @@ Application parameters are automatically parsed from the command line, e.g.:
 python /project_path/my_application.py --output_directory=/path/to/output/dir
 ```
 
+### Development
+
+Slingpy uses Black and Import Sort, run via [pre-commit](https://pre-commit.com) to ensure consistant code formatting. 
+If making code changes to Slingpy, install the development dependencies and pre-commit git hook with:
+
+```bash
+pip install -r requirements-dev.txt
+pre-commit install
+```
+
 ### License
 
 [License](LICENSE.txt)

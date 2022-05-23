@@ -1,0 +1,5 @@
+# Development-only dependencies
+black~=22.3.0
+isort~=5.10.1
+pre-commit~=2.19.0
+pre-commit-hooks~=4.2.0
