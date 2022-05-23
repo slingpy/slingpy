@@ -15,13 +15,15 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import six
-import h5py
 import datetime
+from typing import AnyStr, Dict, Generator, List, Optional, Tuple
+
+import h5py
 import numpy as np
-from typing import List, AnyStr, Dict, Tuple, Generator, Optional
-from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
+import six
+
 from slingpy.data_access.data_sources.composite_data_source import CompositeDataSource
+from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
 
 
 class HDF5Tools(object):

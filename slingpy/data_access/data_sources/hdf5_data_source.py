@@ -15,12 +15,14 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import h5py
 import hashlib
+from typing import IO, AnyStr, Dict, List, NoReturn, Optional, Tuple, Union
+
+import h5py
 import numpy as np
-from slingpy.data_access.merge_strategies import *
-from typing import Union, List, IO, AnyStr, NoReturn, Dict, Tuple, Optional
+
 from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from slingpy.data_access.merge_strategies import *
 
 
 class HDF5DataSource(AbstractDataSource):

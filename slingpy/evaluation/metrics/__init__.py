@@ -15,11 +15,11 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from .r2 import R2Score
 from .auc import AreaUnderTheCurve
-from .mae import MeanAbsoluteError
-from .topk_recall import TopKRecall
-from .spearman_rho import SpearmanRho
-from .rmse import RootMeanSquaredError
 from .explained_variance import ExplainedVariance
+from .mae import MeanAbsoluteError
+from .r2 import R2Score
+from .rmse import RootMeanSquaredError
 from .smape import SymmetricMeanAbsolutePercentageError
+from .spearman_rho import SpearmanRho
+from .topk_recall import TopKRecall

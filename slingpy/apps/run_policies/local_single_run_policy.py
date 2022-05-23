@@ -16,6 +16,7 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 from typing import Callable
+
 from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult
 
 

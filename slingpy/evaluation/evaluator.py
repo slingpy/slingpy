@@ -15,13 +15,15 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import numpy as np
-from typing import Optional, List
 from collections import OrderedDict
-from slingpy.utils.logging import info, warn
-from slingpy.models.abstract_base_model import AbstractBaseModel
-from slingpy.evaluation.metrics.abstract_metric import AbstractMetric
+from typing import List, Optional
+
+import numpy as np
+
 from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from slingpy.evaluation.metrics.abstract_metric import AbstractMetric
+from slingpy.models.abstract_base_model import AbstractBaseModel
+from slingpy.utils.logging import info, warn
 
 
 class Evaluator(object):

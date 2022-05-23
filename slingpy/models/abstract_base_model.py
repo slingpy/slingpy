@@ -15,12 +15,14 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import six
-import numpy as np
 from abc import ABCMeta, abstractmethod
-from typing import Optional, AnyStr, Type, List
-from slingpy.utils.argument_dictionary import ArgumentDictionary
+from typing import AnyStr, List, Optional, Type
+
+import numpy as np
+import six
+
 from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from slingpy.utils.argument_dictionary import ArgumentDictionary
 
 
 @six.add_metaclass(ABCMeta)

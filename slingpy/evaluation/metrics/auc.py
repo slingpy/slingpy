@@ -15,9 +15,11 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from typing import AnyStr, Optional
+
 import numpy as np
-from typing import Optional, AnyStr
 from sklearn.metrics import roc_auc_score
+
 from slingpy.evaluation.metrics.abstract_metric import AbstractMetric
 
 

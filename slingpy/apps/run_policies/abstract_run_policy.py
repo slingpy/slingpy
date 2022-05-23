@@ -16,13 +16,15 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
-import six
-import time
 import pickle
+import time
 import traceback
-from dataclasses import dataclass
 from abc import ABCMeta, abstractmethod
-from typing import Dict, Any, AnyStr, Tuple, Optional
+from dataclasses import dataclass
+from typing import Any, AnyStr, Dict, Optional, Tuple
+
+import six
+
 from slingpy.utils.argument_dictionary import ArgumentDictionary
 
 

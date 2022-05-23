@@ -15,14 +15,16 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import os
-import six
 import json
+import os
 import shutil
 import tarfile
 import tempfile
-from typing import AnyStr, Type
 from abc import ABCMeta, abstractmethod
+from typing import AnyStr, Type
+
+import six
+
 from slingpy.models.abstract_base_model import AbstractBaseModel
 
 

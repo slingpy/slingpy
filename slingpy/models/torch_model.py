@@ -16,25 +16,26 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
-import sys
-import torch
 import shutil
+import sys
 import tempfile
-import numpy as np
 from time import time
+from typing import AnyStr, Callable, List, Optional, Type
+
+import numpy as np
+import torch
 import torch.nn as nn
 import torch.optim as optim
-from slingpy.utils.logging import info
 from torch.utils.data import DataLoader
-from slingpy.losses.torch_loss import TorchLoss
-from slingpy.utils.plugin_tools import PluginTools
-from typing import Optional, Type, AnyStr, Callable, List
-from slingpy.models.abstract_base_model import AbstractBaseModel
-from slingpy.transforms.abstract_transform import AbstractTransform
+
 from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
 from slingpy.data_access.data_sources.composite_data_source import CompositeDataSource
+from slingpy.losses.torch_loss import TorchLoss
+from slingpy.models.abstract_base_model import AbstractBaseModel
 from slingpy.models.tarfile_serialisation_base_model import TarfileSerialisationBaseModel
-
+from slingpy.transforms.abstract_transform import AbstractTransform
+from slingpy.utils.logging import info
+from slingpy.utils.plugin_tools import PluginTools
 
 if sys.version_info < (3, 0, 0):
     import cPickle as pickle

@@ -15,14 +15,15 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import os
 import glob
-import inspect
 import importlib
 import importlib.util
+import inspect
+import os
 from pathlib import Path
+from typing import AnyStr, Callable, Dict, List
+
 from slingpy.utils.logging import warn
-from typing import AnyStr, Dict, List, Callable
 
 
 class PluginTools(object):

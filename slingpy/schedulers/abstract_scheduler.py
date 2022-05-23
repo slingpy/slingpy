@@ -16,13 +16,15 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
-import sys
-import six
 import subprocess
-from argparse import ArgumentParser
-from slingpy.utils.logging import info
+import sys
 from abc import ABCMeta, abstractmethod
-from typing import Set, Optional, AnyStr, Dict, Tuple
+from argparse import ArgumentParser
+from typing import AnyStr, Dict, Optional, Set, Tuple
+
+import six
+
+from slingpy.utils.logging import info
 
 
 @six.add_metaclass(ABCMeta)

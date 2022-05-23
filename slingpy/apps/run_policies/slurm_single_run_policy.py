@@ -18,11 +18,12 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import print_function
 
 import os
-import sys
 import pickle
+import sys
+
 from slingpy.apps.app_paths import AppPaths
-from slingpy.schedulers.slurm_scheduler import SlurmScheduler
 from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult
+from slingpy.schedulers.slurm_scheduler import SlurmScheduler
 
 
 class SlurmSingleRunPolicy(AbstractRunPolicy):

@@ -16,11 +16,12 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
-from typing import AnyStr, List, Dict
+from typing import AnyStr, Dict, List
+
 from slingpy.apps.app_paths import AppPaths
-from slingpy.utils.metric_dict_tools import MetricDictTools
-from slingpy.apps.run_policies.composite_run_policy import CompositeRunPolicy
 from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult, RunResultWithMetaData
+from slingpy.apps.run_policies.composite_run_policy import CompositeRunPolicy
+from slingpy.utils.metric_dict_tools import MetricDictTools
 
 
 class CrossValidationRunPolicy(CompositeRunPolicy):

@@ -16,9 +16,10 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
-import torch
-import numpy as np
 import random as rn
+
+import numpy as np
+import torch
 import torch.backends.cudnn
 
 

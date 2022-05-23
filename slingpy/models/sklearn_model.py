@@ -15,14 +15,16 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from typing import AnyStr, List, Optional
+
 import numpy as np
 from sklearn.base import BaseEstimator
-from typing import Optional, List, AnyStr
-from slingpy.utils.plugin_tools import PluginTools
+
+from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
 from slingpy.data_access.merge_strategies import *
 from slingpy.models.abstract_base_model import AbstractBaseModel
 from slingpy.models.pickleable_base_model import PickleableBaseModel
-from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from slingpy.utils.plugin_tools import PluginTools
 
 
 class SklearnModel(PickleableBaseModel):

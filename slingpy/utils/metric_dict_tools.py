@@ -17,10 +17,11 @@ DEALINGS IN THE SOFTWARE.
 """
 import os
 import sys
-import numpy as np
-from typing import Tuple, Dict, List
-from slingpy.utils.logging import info, error
+from typing import Dict, List, Tuple
 
+import numpy as np
+
+from slingpy.utils.logging import error, info
 
 if sys.version_info < (3, 0, 0):
     import cPickle as pickle

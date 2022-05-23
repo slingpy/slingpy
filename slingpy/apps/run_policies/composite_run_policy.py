@@ -17,18 +17,19 @@ DEALINGS IN THE SOFTWARE.
 """
 import os
 import pickle
-from typing import List, Dict
-from functools import partial
 from abc import abstractmethod
-from slingpy.utils.logging import error
+from functools import partial
+from typing import Dict, List
+
 from slingpy.apps.app_paths import AppPaths
-from slingpy.utils.nestable_pool import NestablePool as Pool
 from slingpy.apps.run_policies.abstract_run_policy import (
     AbstractRunPolicy,
     RunResult,
     RunResultWithMetaData,
     TracebackException,
 )
+from slingpy.utils.logging import error
+from slingpy.utils.nestable_pool import NestablePool as Pool
 
 
 class CompositeRunPolicy(AbstractRunPolicy):

@@ -15,12 +15,13 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import six
 import sys
 from abc import ABCMeta
 from typing import AnyStr, Type
-from slingpy.models.abstract_base_model import AbstractBaseModel
 
+import six
+
+from slingpy.models.abstract_base_model import AbstractBaseModel
 
 if sys.version_info < (3, 0, 0):
     import cPickle as pickle

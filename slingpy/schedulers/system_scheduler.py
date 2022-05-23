@@ -15,11 +15,12 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import os
 import inspect
+import os
 from typing import AnyStr
-from slingpy.utils.auto_argparse import AutoArgparse
+
 from slingpy.schedulers.abstract_scheduler import AbstractScheduler
+from slingpy.utils.auto_argparse import AutoArgparse
 
 
 class SystemScheduler(object):

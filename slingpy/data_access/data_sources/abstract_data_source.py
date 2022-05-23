@@ -15,14 +15,16 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import six
-import numpy as np
-from itertools import chain
-from collections import defaultdict
 from abc import ABCMeta, abstractmethod
-from typing import Tuple, List, Union, Optional, AnyStr, Dict
-from slingpy.utils.argument_dictionary import ArgumentDictionary
+from collections import defaultdict
+from itertools import chain
+from typing import AnyStr, Dict, List, Optional, Tuple, Union
+
+import numpy as np
+import six
+
 from slingpy.data_access.data_sources.torch_data_source import TorchDataSource
+from slingpy.utils.argument_dictionary import ArgumentDictionary
 
 
 @six.add_metaclass(ABCMeta)

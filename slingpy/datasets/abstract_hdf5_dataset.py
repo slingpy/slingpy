@@ -15,20 +15,22 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import os
 import glob
-import pickle
 import inspect
-import numpy as np
+import os
+import pickle
 from abc import abstractmethod
 from dataclasses import dataclass
-from slingpy.utils.path_tools import PathTools
-from slingpy.data_access.merge_strategies import *
-from slingpy.data_access.data_sources.hdf5_tools import HDF5Tools
-from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
-from typing import List, AnyStr, Dict, Tuple, Union, Optional, Set, Generator
-from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from typing import AnyStr, Dict, Generator, List, Optional, Set, Tuple, Union
+
+import numpy as np
+
 from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult
+from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
+from slingpy.data_access.data_sources.hdf5_tools import HDF5Tools
+from slingpy.data_access.merge_strategies import *
+from slingpy.utils.path_tools import PathTools
 
 
 @dataclass()

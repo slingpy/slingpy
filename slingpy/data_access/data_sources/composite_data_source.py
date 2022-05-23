@@ -15,11 +15,13 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import numpy as np
-from itertools import chain
-from functools import reduce
 from collections import OrderedDict
-from typing import List, Any, NoReturn, AnyStr, Dict, Tuple, Union, Optional
+from functools import reduce
+from itertools import chain
+from typing import Any, AnyStr, Dict, List, NoReturn, Optional, Tuple, Union
+
+import numpy as np
+
 from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
 
 

@@ -50,13 +50,14 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import six
-import struct
-import inspect
 import hashlib
+import inspect
+import struct
 from collections import defaultdict
 from collections.abc import Iterable
-from typing import List, AnyStr, Dict
+from typing import AnyStr, Dict, List
+
+import six
 
 
 class ArgumentDictionary(object):

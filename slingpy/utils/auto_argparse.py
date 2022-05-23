@@ -16,8 +16,8 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import inspect
-from typing import AnyStr
 from argparse import ArgumentParser
+from typing import AnyStr
 
 
 class AutoArgparse(object):

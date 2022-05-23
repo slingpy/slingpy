@@ -17,16 +17,18 @@ DEALINGS IN THE SOFTWARE.
 """
 import os
 import shutil
-import numpy as np
 from distutils.dir_util import copy_tree
+from typing import AnyStr, Dict, List, Tuple, Union
+
+import numpy as np
+
 from slingpy.apps.app_paths import AppPaths
-from slingpy.utils.logging import info, warn
-from slingpy.utils.path_tools import PathTools
-from typing import Tuple, Dict, Union, List, AnyStr
-from slingpy.utils.metric_dict_tools import MetricDictTools
+from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult, RunResultWithMetaData
 from slingpy.apps.run_policies.composite_run_policy import CompositeRunPolicy
 from slingpy.apps.run_policies.hyperopt.exploration import AbstractExplorationStrategy
-from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult, RunResultWithMetaData
+from slingpy.utils.logging import info, warn
+from slingpy.utils.metric_dict_tools import MetricDictTools
+from slingpy.utils.path_tools import PathTools
 
 
 class HyperoptRunPolicy(CompositeRunPolicy):

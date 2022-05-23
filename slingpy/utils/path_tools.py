@@ -17,7 +17,9 @@ DEALINGS IN THE SOFTWARE.
 """
 import os
 from contextlib import contextmanager
+
 from ilock import ILock
+
 from slingpy.utils.logging import warn
 
 

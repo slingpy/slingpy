@@ -16,12 +16,14 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
-import numpy as np
 from typing import Tuple
+
+import numpy as np
 from sklearn.datasets import load_iris
-from slingpy.data_access.data_sources.hdf5_tools import HDF5Tools
-from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
+
 from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
+from slingpy.data_access.data_sources.hdf5_tools import HDF5Tools
 
 
 class Iris(object):

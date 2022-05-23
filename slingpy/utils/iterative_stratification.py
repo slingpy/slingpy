@@ -104,10 +104,11 @@ Bibtex:
     }
 """
 
-from sklearn.model_selection._split import _BaseKFold
+import itertools
+
 import numpy as np
 import scipy.sparse as sp
-import itertools
+from sklearn.model_selection._split import _BaseKFold
 from sklearn.utils import check_random_state
 
 

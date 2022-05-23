@@ -17,33 +17,35 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import six
-import shutil
 import pickle
+import shutil
 import tempfile
+from abc import ABCMeta, abstractmethod
+from datetime import datetime
+from typing import Any, AnyStr, Dict, List, Optional, Tuple, Union
+
 import numpy as np
 import pandas as pd
-from datetime import datetime
-from abc import ABCMeta, abstractmethod
+import six
+
 from slingpy.apps.app_paths import AppPaths
-from slingpy.utils.logging import info, warn
-from slingpy.utils.path_tools import PathTools
-from slingpy.utils.init_seeds import init_seeds
-from slingpy.evaluation.evaluator import Evaluator
-from slingpy.utils.auto_argparse import AutoArgparse
-from slingpy.utils.metric_dict_tools import MetricDictTools
-from slingpy.utils.gpu_tools import get_num_available_gpus
-from slingpy.models.abstract_base_model import AbstractBaseModel
-from slingpy.data_access.data_sources.hdf5_tools import HDF5Tools
-from typing import Tuple, Dict, Union, List, AnyStr, Any, Optional
-from slingpy.evaluation.metrics.abstract_metric import AbstractMetric
-from slingpy.apps.run_policies.slurm_single_run_policy import SlurmSingleRunPolicy
-from slingpy.apps.run_policies.local_single_run_policy import LocalSingleRunPolicy
-from slingpy.apps.run_policies.hyperopt.hyperopt_run_policy import HyperoptRunPolicy
-from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
 from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult
 from slingpy.apps.run_policies.cross_validation_run_policy import CrossValidationRunPolicy
 from slingpy.apps.run_policies.hyperopt.exploration import RandomExplorationStrategy, SequentialExplorationStrategy
+from slingpy.apps.run_policies.hyperopt.hyperopt_run_policy import HyperoptRunPolicy
+from slingpy.apps.run_policies.local_single_run_policy import LocalSingleRunPolicy
+from slingpy.apps.run_policies.slurm_single_run_policy import SlurmSingleRunPolicy
+from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from slingpy.data_access.data_sources.hdf5_tools import HDF5Tools
+from slingpy.evaluation.evaluator import Evaluator
+from slingpy.evaluation.metrics.abstract_metric import AbstractMetric
+from slingpy.models.abstract_base_model import AbstractBaseModel
+from slingpy.utils.auto_argparse import AutoArgparse
+from slingpy.utils.gpu_tools import get_num_available_gpus
+from slingpy.utils.init_seeds import init_seeds
+from slingpy.utils.logging import info, warn
+from slingpy.utils.metric_dict_tools import MetricDictTools
+from slingpy.utils.path_tools import PathTools
 
 
 class DatasetHolder(object):
