@@ -23,7 +23,7 @@ import torch.backends.cudnn
 
 
 def init_seeds(seed):
-    os.environ['PYTHONHASHSEED'] = '0'
+    os.environ["PYTHONHASHSEED"] = "0"
 
     rn.seed(seed)
     np.random.seed(seed)

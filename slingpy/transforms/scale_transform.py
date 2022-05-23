@@ -27,8 +27,9 @@ class ScaleTransform(AbstractTransform):
         self.scale = scale
 
     def transform(self, inputs: List[torch.Tensor]) -> List[torch.Tensor]:
-        assert len(self.loc) == len(inputs) and len(self.scale) == len(inputs), \
-            "__loc__ and __scale__ in __ScaleTransform__ must be the same length as the inputs to be transformed."
+        assert len(self.loc) == len(inputs) and len(self.scale) == len(
+            inputs
+        ), "__loc__ and __scale__ in __ScaleTransform__ must be the same length as the inputs to be transformed."
 
         outs = []
         for input_i, loc_i, scale_i in zip(inputs, self.loc, self.scale):

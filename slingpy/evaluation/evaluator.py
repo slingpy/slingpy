@@ -26,9 +26,16 @@ from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSo
 
 class Evaluator(object):
     @staticmethod
-    def evaluate(model: AbstractBaseModel, dataset_x: AbstractDataSource, dataset_y: AbstractDataSource,
-                 metrics: List[AbstractMetric], set_name="Test set", with_print=True, threshold: Optional[float] = None,
-                 batch_size: int = 256):
+    def evaluate(
+        model: AbstractBaseModel,
+        dataset_x: AbstractDataSource,
+        dataset_y: AbstractDataSource,
+        metrics: List[AbstractMetric],
+        set_name="Test set",
+        with_print=True,
+        threshold: Optional[float] = None,
+        batch_size: int = 256,
+    ):
         y_pred = model.predict(dataset_x, batch_size=batch_size, row_names=dataset_y.get_row_names())
         y_true = dataset_y.get_data()
 
@@ -47,8 +54,10 @@ class Evaluator(object):
                 metric_name = metric.__class__.__name__
                 value = metric.evaluate(y_pred_i, y_true_i, threshold=threshold)
                 if metric_name in metric_dict:
-                    message = f"{metric_name} was already present in metric dict. " \
-                              f"Do you have two metrics set for evaluation with the same name?"
+                    message = (
+                        f"{metric_name} was already present in metric dict. "
+                        f"Do you have two metrics set for evaluation with the same name?"
+                    )
                     warn(message)
                     raise AssertionError(message)
                 metric_dict[metric_name] = value

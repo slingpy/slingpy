@@ -23,6 +23,7 @@ class LocalSingleRunPolicy(AbstractRunPolicy):
     """
     A runnable policy for locally executed runs.
     """
+
     def __init__(self, base_policy_fun: Callable[..., RunResult]):
         self.base_policy_fun = base_policy_fun
         """ A reference to the application paths object. """

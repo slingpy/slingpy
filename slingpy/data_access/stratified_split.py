@@ -27,8 +27,7 @@ from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSo
 
 class StratifiedSplit(object):
     @staticmethod
-    def make_synthetic_labels_for_stratification(num_bins=5, max_num_unique_values=10,
-                                                 label_candidates=list([])):
+    def make_synthetic_labels_for_stratification(num_bins=5, max_num_unique_values=10, label_candidates=list([])):
         synthetic_labels = []
         for arg_idx in range(len(label_candidates)):
             arg = label_candidates[arg_idx]
@@ -47,10 +46,16 @@ class StratifiedSplit(object):
                 if np.alltrue(nan_indices):
                     continue
 
-                assignments = np.digitize(arg, np.linspace(np.min(arg[np.logical_not(nan_indices)]),
-                                                           np.max(arg[np.logical_not(nan_indices)]), num_bins)) - 1
-                more_labels = to_categorical(assignments,
-                                             num_classes=num_bins)
+                assignments = (
+                    np.digitize(
+                        arg,
+                        np.linspace(
+                            np.min(arg[np.logical_not(nan_indices)]), np.max(arg[np.logical_not(nan_indices)]), num_bins
+                        ),
+                    )
+                    - 1
+                )
+                more_labels = to_categorical(assignments, num_classes=num_bins)
 
             synthetic_labels.append(more_labels)
         synthetic_labels = np.column_stack(synthetic_labels)
@@ -68,10 +73,17 @@ class StratifiedSplit(object):
                 counts[key] = 0
         return converted_synthetic_labels
 
-    def split(self, dataset: AbstractDataSource, test_set_fraction: float = 0.2,
-              min_group_size: int = 5, seed: int = 0, num_splits: int = 2,
-              split_index: int = 0, max_num_unique_values: int = 10,
-              bin_size: int = 5) -> Tuple[List[AnyStr], List[AnyStr]]:
+    def split(
+        self,
+        dataset: AbstractDataSource,
+        test_set_fraction: float = 0.2,
+        min_group_size: int = 5,
+        seed: int = 0,
+        num_splits: int = 2,
+        split_index: int = 0,
+        max_num_unique_values: int = 10,
+        bin_size: int = 5,
+    ) -> Tuple[List[AnyStr], List[AnyStr]]:
         split_index = max(0, split_index)  # __split_index__ must be at least 0.
         data = np.concatenate(dataset.get_data(), axis=-1)
         split_ids = dataset.get_row_names()
@@ -88,24 +100,28 @@ class StratifiedSplit(object):
 
         x = np.arange(len(data))
         converted_synthetic_labels = StratifiedSplit.make_synthetic_labels_for_stratification(
-            label_candidates=synthetic_labels,
-            num_bins=bin_size,
-            max_num_unique_values=max_num_unique_values
+            label_candidates=synthetic_labels, num_bins=bin_size, max_num_unique_values=max_num_unique_values
         )
         converted_synthetic_labels = np.squeeze(
             converted_synthetic_labels.astype(int).dot(2 ** np.arange(converted_synthetic_labels.shape[-1])[::-1])
         )
-        synthetic_labels_map = dict(zip(sorted(list(set(converted_synthetic_labels))),
-                                        range(len(set(converted_synthetic_labels)))))
-        converted_synthetic_labels = np.array(list(
-            map(lambda xi: synthetic_labels_map[xi], converted_synthetic_labels)
-        ))
-        converted_synthetic_labels = self.merge_groups_smaller_than(converted_synthetic_labels,
-                                                                    min_group_size=min_group_size)
+        synthetic_labels_map = dict(
+            zip(sorted(list(set(converted_synthetic_labels))), range(len(set(converted_synthetic_labels))))
+        )
+        converted_synthetic_labels = np.array(
+            list(map(lambda xi: synthetic_labels_map[xi], converted_synthetic_labels))
+        )
+        converted_synthetic_labels = self.merge_groups_smaller_than(
+            converted_synthetic_labels, min_group_size=min_group_size
+        )
 
         if num_splits == 2:
-            sss = IterativeStratification(n_splits=2, order=2, random_state=seed,
-                                          sample_distribution_per_fold=[test_set_fraction, 1.0 - test_set_fraction])
+            sss = IterativeStratification(
+                n_splits=2,
+                order=2,
+                random_state=seed,
+                sample_distribution_per_fold=[test_set_fraction, 1.0 - test_set_fraction],
+            )
         else:
             sss = IterativeStratification(n_splits=num_splits, order=2, random_state=seed)
 

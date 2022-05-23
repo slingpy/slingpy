@@ -26,6 +26,7 @@ class AbstractTransform(object):
     """
     An abstract transform for pre-processing data interactively.
     """
+
     @abstractmethod
     def transform(self, inputs: List[torch.Tensor]) -> List[torch.Tensor]:
         raise NotImplementedError()

@@ -29,5 +29,5 @@ class SymmetricMeanAbsolutePercentageError(AbstractMetric):
         return "SMAPE"
 
     def evaluate(self, y_pred: np.ndarray, y_true: np.ndarray, threshold: Optional[float] = None) -> np.ndarray:
-        ret_val = 100. / len(y_true) * np.sum(2 * np.abs(y_pred - y_true) / (np.abs(y_true) + np.abs(y_pred)))
+        ret_val = 100.0 / len(y_true) * np.sum(2 * np.abs(y_pred - y_true) / (np.abs(y_true) + np.abs(y_pred)))
         return ret_val

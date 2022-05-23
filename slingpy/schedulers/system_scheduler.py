@@ -29,8 +29,15 @@ class SystemScheduler(object):
     """
 
     @staticmethod
-    def execute(clazz, mem_limit_in_mb: int = 2048, num_cpus: int = 1, virtualenv_path: AnyStr = "",
-                project_dir_path: AnyStr = "", exclude: AnyStr = "", **kwargs):
+    def execute(
+        clazz,
+        mem_limit_in_mb: int = 2048,
+        num_cpus: int = 1,
+        virtualenv_path: AnyStr = "",
+        project_dir_path: AnyStr = "",
+        exclude: AnyStr = "",
+        **kwargs,
+    ):
         output_directory = kwargs["output_directory"]
         logfile = os.path.join(output_directory, "log.txt")
         err_logfile = os.path.join(output_directory, "errlog.txt")
@@ -38,10 +45,12 @@ class SystemScheduler(object):
 
         parser = AutoArgparse.get_parser_for_clazz(clazz)
         argument_list = AbstractScheduler.convert_arguments_dict_to_program_argument_string(parser, kwargs)
-        cmd = f"source {virtualenv_path}/bin/activate && " \
-              f"export PYTHONPATH={project_dir_path}:\$PYTHONPATH && " \
-              f"export HDF5_USE_FILE_LOCKING='FALSE' && " \
-              f"python {main_app_path} {argument_list}"
+        cmd = (
+            f"source {virtualenv_path}/bin/activate && "
+            f"export PYTHONPATH={project_dir_path}:\$PYTHONPATH && "
+            f"export HDF5_USE_FILE_LOCKING='FALSE' && "
+            f"python {main_app_path} {argument_list}"
+        )
         cmd = f"{cmd} > {logfile} 2> {err_logfile} "
 
         contents, err_contents = AbstractScheduler.run_command(cmd, logfile, err_logfile)

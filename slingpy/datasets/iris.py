@@ -28,8 +28,8 @@ class Iris(object):
     @staticmethod
     def load_data(save_directory) -> Tuple[AbstractDataSource, AbstractDataSource]:
         iris = load_iris()
-        x, y = iris['data'], iris['target'][:, np.newaxis]
-        feature_names = iris['feature_names']
+        x, y = iris["data"], iris["target"][:, np.newaxis]
+        feature_names = iris["feature_names"]
 
         h5_file_x = os.path.join(save_directory, "iris_x.h5")
         h5_file_y = os.path.join(save_directory, "iris_y.h5")

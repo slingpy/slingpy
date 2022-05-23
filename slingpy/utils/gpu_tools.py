@@ -20,10 +20,10 @@ from typing import AnyStr, List
 
 
 def get_gpu_devices() -> List[AnyStr]:
-    """ Get the available GPU devices. """
+    """Get the available GPU devices."""
     return [torch.cuda.get_device_name(idx) for idx in range(torch.cuda.device_count())]
 
 
 def get_num_available_gpus():
-    """ Get the number of available GPUs. """
+    """Get the number of available GPUs."""
     return len(get_gpu_devices())

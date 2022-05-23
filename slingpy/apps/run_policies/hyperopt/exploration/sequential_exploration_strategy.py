@@ -23,6 +23,7 @@ class SequentialExplorationStrategy(AbstractExplorationStrategy):
     """
     A sequential exploration strategy for hyper-parameter optimization.
     """
+
     def __init__(self, hyperopt_param_ranges: Dict[AnyStr, Union[List, Tuple]]):
         super(SequentialExplorationStrategy, self).__init__(hyperopt_param_ranges=hyperopt_param_ranges)
 
@@ -39,8 +40,10 @@ class SequentialExplorationStrategy(AbstractExplorationStrategy):
                     choice = choice.item()
                 new_params[k] = choice
             else:
-                raise AssertionError("Only hyperopt_parameters with finite numbers of permutations can be used"
-                                     "with __get_next_hyperopt_choice_generator__.")
+                raise AssertionError(
+                    "Only hyperopt_parameters with finite numbers of permutations can be used"
+                    "with __get_next_hyperopt_choice_generator__."
+                )
 
         for i, key in enumerate(sorted(self.hyperopt_param_ranges.keys())):
             state[i] += 1

@@ -55,33 +55,36 @@ class AbstractBaseApplication(AbstractRunPolicy):
     """
     Abstract base application to derive a machine learning starter project from.
     """
-    def __init__(self,
-                 output_directory: AnyStr = "",
-                 project_root_directory: AnyStr = "",
-                 seed: int = 909,
-                 evaluate: bool = True,
-                 evaluate_against: AnyStr = "test",
-                 hyperopt: bool = False,
-                 hyperopt_metric_name: AnyStr = "MeanAbsoluteError",
-                 hyperopt_comparison_operator: AnyStr = "<",  # One of '<' or '>'.
-                 num_hyperopt_runs: int = 30,
-                 split_index_outer: int = 1,
-                 split_index_inner: int = 1,
-                 num_splits_outer: int = 5,
-                 num_splits_inner: int = 5,
-                 save_predictions_batch_size: int = 256,
-                 run_parallel_subtasks: bool = False,
-                 single_run: bool = False,
-                 schedule_on_slurm: bool = False,
-                 save_predictions: bool = False,
-                 save_predictions_file_format: AnyStr = "tsv",
-                 nested_cross_validation: bool = True,
-                 version_string: AnyStr = "0x000",
-                 remote_execution_time_limit_days: int = 1,
-                 remote_execution_time_limit_hours: int = 0,
-                 remote_execution_mem_limit_in_mb: int = 2048,
-                 remote_execution_num_cpus: int = 1,
-                 remote_execution_virtualenv_path: AnyStr = ""):
+
+    def __init__(
+        self,
+        output_directory: AnyStr = "",
+        project_root_directory: AnyStr = "",
+        seed: int = 909,
+        evaluate: bool = True,
+        evaluate_against: AnyStr = "test",
+        hyperopt: bool = False,
+        hyperopt_metric_name: AnyStr = "MeanAbsoluteError",
+        hyperopt_comparison_operator: AnyStr = "<",  # One of '<' or '>'.
+        num_hyperopt_runs: int = 30,
+        split_index_outer: int = 1,
+        split_index_inner: int = 1,
+        num_splits_outer: int = 5,
+        num_splits_inner: int = 5,
+        save_predictions_batch_size: int = 256,
+        run_parallel_subtasks: bool = False,
+        single_run: bool = False,
+        schedule_on_slurm: bool = False,
+        save_predictions: bool = False,
+        save_predictions_file_format: AnyStr = "tsv",
+        nested_cross_validation: bool = True,
+        version_string: AnyStr = "0x000",
+        remote_execution_time_limit_days: int = 1,
+        remote_execution_time_limit_hours: int = 0,
+        remote_execution_mem_limit_in_mb: int = 2048,
+        remote_execution_num_cpus: int = 1,
+        remote_execution_virtualenv_path: AnyStr = "",
+    ):
         super(AbstractBaseApplication, self).__init__()
         self.seed = seed
         """ The random seed to use. """
@@ -181,7 +184,7 @@ class AbstractBaseApplication(AbstractRunPolicy):
             app_paths=self.app_paths,
             evaluate_against=evaluate_against,
             cross_validation_name="inner",
-            run_parallel=self.run_parallel_subtasks
+            run_parallel=self.run_parallel_subtasks,
         )
         if self.single_run:
             return base_run
@@ -202,23 +205,20 @@ class AbstractBaseApplication(AbstractRunPolicy):
                 hyperopt_params=self.get_hyperopt_parameter_ranges(),
                 exploration_strategy=exploration_strategy,
                 run_parallel=self.run_parallel_subtasks,
-                max_num_hyperopt_runs=max_num_hyperopt_runs   # Do not perform more runs than necessary.
+                max_num_hyperopt_runs=max_num_hyperopt_runs,  # Do not perform more runs than necessary.
             )
             cv_outer = CrossValidationRunPolicy(
                 hyperopt_policy,
                 app_paths=self.app_paths,
                 evaluate_against=evaluate_against,
                 run_parallel=self.run_parallel_subtasks,
-                cross_validation_name="outer"
+                cross_validation_name="outer",
             )
             return cv_outer
         else:
             if self.nested_cross_validation:
                 cv_outer = CrossValidationRunPolicy(
-                    cv_inner,
-                    app_paths=self.app_paths,
-                    evaluate_against=evaluate_against,
-                    cross_validation_name="outer"
+                    cv_inner, app_paths=self.app_paths, evaluate_against=evaluate_against, cross_validation_name="outer"
                 )
                 return cv_outer
             else:
@@ -270,13 +270,19 @@ class AbstractBaseApplication(AbstractRunPolicy):
         raise NotImplementedError()
 
     def get_save_prediction_dataset_names(self) -> List[AnyStr]:
-        """ Obtain names of datasets for which you would like to save predictions. """
+        """Obtain names of datasets for which you would like to save predictions."""
         return ["training_set_x", "validation_set_x", "test_set_x"]
 
     def save_predictions_with_format(self, file_path, data, row_names, column_names, dataset_name):
         if self.save_predictions_file_format == "h5":
-            HDF5Tools.save_h5_file(file_path, data=data, row_names=row_names, column_names=column_names,
-                                   dataset_name=dataset_name, dataset_version=self.version_string)
+            HDF5Tools.save_h5_file(
+                file_path,
+                data=data,
+                row_names=row_names,
+                column_names=column_names,
+                dataset_name=dataset_name,
+                dataset_version=self.version_string,
+            )
         elif self.save_predictions_file_format == "tsv":
             df = pd.DataFrame(data, columns=column_names, index=row_names)
             df.index.name = "id"
@@ -294,8 +300,10 @@ class AbstractBaseApplication(AbstractRunPolicy):
 
             dataset = getattr(self.datasets, dataset_name)
             if not isinstance(dataset, AbstractDataSource):
-                warn(f"Could not save predictions for dataset {dataset_name} because it was not an "
-                     f"AbstractDataSource instance. Skipping.")
+                warn(
+                    f"Could not save predictions for dataset {dataset_name} because it was not an "
+                    f"AbstractDataSource instance. Skipping."
+                )
                 continue
 
             row_names = dataset.get_row_names()
@@ -310,27 +318,36 @@ class AbstractBaseApplication(AbstractRunPolicy):
                 output_names = [f"label_{idx}" for idx in range(num_predictions)]
                 assert num_predictions == len(output_names)
 
-                file_path = self.get_prediction_file_path(dataset_name,
-                                                          output_index=output_idx,
-                                                          extension=self.save_predictions_file_format)
+                file_path = self.get_prediction_file_path(
+                    dataset_name, output_index=output_idx, extension=self.save_predictions_file_format
+                )
                 try:
-                    self.save_predictions_with_format(file_path, data=output_i, row_names=row_names,
-                                                      column_names=output_names, dataset_name=dataset_name)
+                    self.save_predictions_with_format(
+                        file_path,
+                        data=output_i,
+                        row_names=row_names,
+                        column_names=output_names,
+                        dataset_name=dataset_name,
+                    )
                     info("Saved raw model predictions to", file_path)
 
                     if threshold is not None:
                         thresholded_file_path = self.get_thresholded_prediction_file_path(
                             dataset_name, extension=self.save_predictions_file_format, output_index=output_idx
                         )
-                        self.save_predictions_with_format(thresholded_file_path,
-                                                          data=(output_i > threshold).astype(int),
-                                                          row_names=row_names,
-                                                          column_names=output_names,
-                                                          dataset_name=dataset_name)
+                        self.save_predictions_with_format(
+                            thresholded_file_path,
+                            data=(output_i > threshold).astype(int),
+                            row_names=row_names,
+                            column_names=output_names,
+                            dataset_name=dataset_name,
+                        )
                         info("Saved thresholded model predictions to", thresholded_file_path)
                 except AssertionError:
-                    warn(f"Could not save prediction file of type {self.save_predictions_file_format} because it is not "
-                         f"a supported format. Must be one of ('tsv', 'h5'). Skipping.")
+                    warn(
+                        f"Could not save prediction file of type {self.save_predictions_file_format} because it is not "
+                        f"a supported format. Must be one of ('tsv', 'h5'). Skipping."
+                    )
                     continue
 
     def run_evaluation(self, model: AbstractBaseModel) -> Tuple[Dict[AnyStr, Any], Dict[AnyStr, Any], Optional[float]]:
@@ -347,8 +364,10 @@ class AbstractBaseApplication(AbstractRunPolicy):
         threshold = None
         evaluate_against = self.evaluate_against
         if evaluate_against not in ("test", "val"):
-            warn(f"WARN: Specified wrong argument for --evaluate_against. Value was: {evaluate_against}. "
-                 f"Defaulting to: val.")
+            warn(
+                f"WARN: Specified wrong argument for --evaluate_against. Value was: {evaluate_against}. "
+                f"Defaulting to: val."
+            )
             evaluate_against = "val"
 
         if evaluate_against == "test":
@@ -371,8 +390,13 @@ class AbstractBaseApplication(AbstractRunPolicy):
 
         if self.evaluate:
             if eval_score is None:
-                test_score = self.evaluate_model(model, self.datasets.test_set_x, self.datasets.test_set_y,
-                                                 with_print=evaluate_against == "val", set_name="test")
+                test_score = self.evaluate_model(
+                    model,
+                    self.datasets.test_set_x,
+                    self.datasets.test_set_y,
+                    with_print=evaluate_against == "val",
+                    set_name="test",
+                )
                 eval_score = test_score
             else:
                 test_score = eval_score
@@ -381,9 +405,15 @@ class AbstractBaseApplication(AbstractRunPolicy):
             test_score = None
         return eval_score, test_score, threshold
 
-    def evaluate_model(self, model: AbstractBaseModel, dataset_x: AbstractDataSource, dataset_y: AbstractDataSource,
-                       with_print: bool = True, set_name: AnyStr = "", threshold=None) \
-            -> Dict[AnyStr, Union[float, List[float]]]:
+    def evaluate_model(
+        self,
+        model: AbstractBaseModel,
+        dataset_x: AbstractDataSource,
+        dataset_y: AbstractDataSource,
+        with_print: bool = True,
+        set_name: AnyStr = "",
+        threshold=None,
+    ) -> Dict[AnyStr, Union[float, List[float]]]:
         """
         Evaluates model performance.
 
@@ -398,8 +428,15 @@ class AbstractBaseApplication(AbstractRunPolicy):
         Returns:
             A dictionary with each entry corresponding to an evaluation metric with one or more associated values.
         """
-        return Evaluator.evaluate(model, dataset_x, dataset_y, self.get_metrics(set_name),
-                                  with_print=with_print, set_name=set_name, threshold=threshold)
+        return Evaluator.evaluate(
+            model,
+            dataset_x,
+            dataset_y,
+            self.get_metrics(set_name),
+            with_print=with_print,
+            set_name=set_name,
+            threshold=threshold,
+        )
 
     def get_model_folder_path(self) -> AnyStr:
         return self.app_paths.get_model_folder_path(output_directory=self.output_directory)
@@ -407,8 +444,7 @@ class AbstractBaseApplication(AbstractRunPolicy):
     def get_model_file_path(self, extension: AnyStr = None) -> AnyStr:
         if extension is None:
             extension = self.get_model().get_save_file_extension()
-        return self.app_paths.get_model_file_path(output_directory=self.output_directory,
-                                                  extension=extension)
+        return self.app_paths.get_model_file_path(output_directory=self.output_directory, extension=extension)
 
     def get_prediction_file_path(self, set_name: AnyStr, extension: AnyStr, output_index: int) -> AnyStr:
         return self.app_paths.get_prediction_file_path(
@@ -441,7 +477,7 @@ class AbstractBaseApplication(AbstractRunPolicy):
             setattr(self.datasets, name, data_source)
 
     def run_single(self, **kwargs) -> RunResult:
-        """ Executes a single run directly (disregarding any __self.run_policy__ that may be in place. """
+        """Executes a single run directly (disregarding any __self.run_policy__ that may be in place."""
         prior_args = kwargs
         self.set_params(**kwargs)
 

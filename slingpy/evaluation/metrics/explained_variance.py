@@ -25,6 +25,7 @@ class ExplainedVariance(AbstractMetric):
     """
     Explained variance metric.
     """
+
     def get_abbreviation(self) -> AnyStr:
         return "var_exp"
 

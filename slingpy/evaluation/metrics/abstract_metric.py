@@ -30,7 +30,7 @@ class AbstractMetric(object):
 
     def __hash__(self):
         m = hashlib.sha256()
-        m.update(bytes(type(self).__name__, 'utf-8'))
+        m.update(bytes(type(self).__name__, "utf-8"))
         return int(m.hexdigest(), 16)
 
     def __eq__(self, other):

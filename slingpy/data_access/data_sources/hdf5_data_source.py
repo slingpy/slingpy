@@ -27,6 +27,7 @@ class HDF5DataSource(AbstractDataSource):
     """
     A data source using the h5py backend for data access.
     """
+
     COVARIATES_KEY = "covariates"
     SHAPES_KEY = "shapes"
     ROWNAMES_KEY = "rownames"
@@ -36,9 +37,15 @@ class HDF5DataSource(AbstractDataSource):
     DATASET_NAME = "name"
     DATASET_VERSION = "version"
 
-    def __init__(self, hdf5_file: Union[AnyStr, IO], included_indices: Optional[List[int]] = None,
-                 in_memory: bool = False, fill_missing: bool = True, fill_missing_value: float = float("nan"),
-                 duplicate_merge_strategy: AbstractMergeStrategy = NoMergeStrategy()):
+    def __init__(
+        self,
+        hdf5_file: Union[AnyStr, IO],
+        included_indices: Optional[List[int]] = None,
+        in_memory: bool = False,
+        fill_missing: bool = True,
+        fill_missing_value: float = float("nan"),
+        duplicate_merge_strategy: AbstractMergeStrategy = NoMergeStrategy(),
+    ):
         super(HDF5DataSource, self).__init__(included_indices)
 
         self.hdf5_file = hdf5_file
@@ -82,7 +89,7 @@ class HDF5DataSource(AbstractDataSource):
     def __hash__(self):
         key = self.file_path
         m = hashlib.sha256()
-        m.update(bytes(key, 'utf-8'))
+        m.update(bytes(key, "utf-8"))
         return int(m.hexdigest(), 16)
 
     def _get_file_cache(self):
@@ -101,7 +108,7 @@ class HDF5DataSource(AbstractDataSource):
         has_dynamic_dimensions = len(shape) == 1
         if has_dynamic_dimensions:
             if HDF5DataSource.SHAPES_KEY in hd5_file:
-                original_shape = (None,)*len(hd5_file[HDF5DataSource.SHAPES_KEY].shape)
+                original_shape = (None,) * len(hd5_file[HDF5DataSource.SHAPES_KEY].shape)
             else:
                 original_shape = (None,)
             shape = shape + original_shape
@@ -124,8 +131,9 @@ class HDF5DataSource(AbstractDataSource):
 
     def _check_included_ids_format(self) -> NoReturn:
         all_identifiers = set(range(self._underlying_length()))
-        assert set(self.included_indices).issubset(all_identifiers), \
-            "All included IDs must be present in the identifier list."
+        assert set(self.included_indices).issubset(
+            all_identifiers
+        ), "All included IDs must be present in the identifier list."
 
     def _underlying_length(self):
         return self.get_shape()[0][0]
@@ -191,12 +199,14 @@ class HDF5DataSource(AbstractDataSource):
     def inverse_transform(self, item):
         column_value_maps = self.get_column_code_lists()
         if len(item) != len(column_value_maps):
-            raise AssertionError(f"Item must be the same length as the number of columns in the data source."
-                                 f"Expected {len(column_value_maps):d} but was {len(item):d}.")
+            raise AssertionError(
+                f"Item must be the same length as the number of columns in the data source."
+                f"Expected {len(column_value_maps):d} but was {len(item):d}."
+            )
 
-        item = list(map(lambda value, value_map:
-                        value_map[value] if value_map is not None else value,
-                        item, column_value_maps))
+        item = list(
+            map(lambda value, value_map: value_map[value] if value_map is not None else value, item, column_value_maps)
+        )
         return item
 
     def is_variable_length(self) -> bool:
@@ -256,8 +266,9 @@ class HDF5DataSource(AbstractDataSource):
         else:
             if self.fill_missing:
                 return_shape = self.get_shape()[0][1:]
-                return_value = [np.full(HDF5DataSource.replace_none_with(return_shape),
-                                        fill_value=self.fill_missing_value)]
+                return_value = [
+                    np.full(HDF5DataSource.replace_none_with(return_shape), fill_value=self.fill_missing_value)
+                ]
                 return return_value
             idx = []
         if isinstance(idx, list):

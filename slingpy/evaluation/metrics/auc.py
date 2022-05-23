@@ -25,6 +25,7 @@ class AreaUnderTheCurve(AbstractMetric):
     """
     Mean absolute error metric.
     """
+
     def __init__(self, multi_class: AnyStr = "ovr"):
         self.multi_class = multi_class
 

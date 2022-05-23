@@ -20,7 +20,8 @@ import numpy as np
 
 
 class HashableArray(np.ndarray):
-    """ A hashable np.ndarray for use in caches or as dictionary keys. """
+    """A hashable np.ndarray for use in caches or as dictionary keys."""
+
     def __hash__(self):
         h = xxhash.xxh64()
         h.update(np.copy(self))

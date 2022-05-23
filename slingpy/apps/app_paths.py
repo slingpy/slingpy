@@ -23,6 +23,7 @@ class AppPaths(object):
     """
     Pre-defined application paths.
     """
+
     def __init__(self, project_root_directory):
         self.project_root_directory = project_root_directory
         """ 
@@ -59,11 +60,13 @@ class AppPaths(object):
         return os.path.join(output_directory, f"model.{extension}")
 
     @staticmethod
-    def get_prediction_file_path(output_directory: AnyStr, set_name: AnyStr,
-                                 extension: AnyStr, output_index: int) -> AnyStr:
+    def get_prediction_file_path(
+        output_directory: AnyStr, set_name: AnyStr, extension: AnyStr, output_index: int
+    ) -> AnyStr:
         return os.path.join(output_directory, f"{set_name}_predictions.output_{output_index}.{extension}")
 
     @staticmethod
-    def get_thresholded_prediction_file_path(output_directory: AnyStr, set_name: AnyStr,
-                                             extension: AnyStr, output_index: int) -> AnyStr:
+    def get_thresholded_prediction_file_path(
+        output_directory: AnyStr, set_name: AnyStr, extension: AnyStr, output_index: int
+    ) -> AnyStr:
         return os.path.join(output_directory, f"{set_name}_predictions.output_{output_index}.tresholded.{extension}")

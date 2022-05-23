@@ -40,7 +40,7 @@ class AbstractScheduler(object):
 
     @staticmethod
     def convert_arguments_dict_to_program_argument_string(
-            parser: ArgumentParser, kwargs: Dict, exclude: Optional[Set] = None
+        parser: ArgumentParser, kwargs: Dict, exclude: Optional[Set] = None
     ) -> AnyStr:
         """
         Converts a dictionary of program arguments to an argument string that may be passed on command line.
@@ -74,6 +74,13 @@ class AbstractScheduler(object):
 
     @staticmethod
     @abstractmethod
-    def execute(clazz, mem_limit_in_mb: int = 2048, num_cpus: int = 1, virtualenv_path: AnyStr = "",
-                project_dir_path: AnyStr = "", exclude: AnyStr = "", **kwargs):
+    def execute(
+        clazz,
+        mem_limit_in_mb: int = 2048,
+        num_cpus: int = 1,
+        virtualenv_path: AnyStr = "",
+        project_dir_path: AnyStr = "",
+        exclude: AnyStr = "",
+        **kwargs,
+    ):
         raise NotImplementedError()

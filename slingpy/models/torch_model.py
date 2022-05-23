@@ -43,19 +43,21 @@ else:
 
 
 class TorchModel(TarfileSerialisationBaseModel):
-    def __init__(self,
-                 base_module: nn.Module,  # Note: __base_module__ must also implement ArgumentDictionary.
-                 loss: TorchLoss,
-                 preprocess_x_fn: Optional[Callable[[List[torch.Tensor]], List[torch.Tensor]]] = None,
-                 preprocess_y_fn: Optional[Callable[[List[torch.Tensor]], List[torch.Tensor]]] = None,
-                 postprocess_y_fn: Optional[Callable[[List[torch.Tensor]], List[torch.Tensor]]] = None,
-                 collate_fn: Optional[Callable] = None,
-                 target_transformer: Optional[AbstractTransform] = None,
-                 learning_rate: float = 1e-3,
-                 early_stopping_patience: int = 13,
-                 batch_size: int = 256,
-                 num_epochs: int = 100,
-                 l2_weight: float = 1e-4):
+    def __init__(
+        self,
+        base_module: nn.Module,  # Note: __base_module__ must also implement ArgumentDictionary.
+        loss: TorchLoss,
+        preprocess_x_fn: Optional[Callable[[List[torch.Tensor]], List[torch.Tensor]]] = None,
+        preprocess_y_fn: Optional[Callable[[List[torch.Tensor]], List[torch.Tensor]]] = None,
+        postprocess_y_fn: Optional[Callable[[List[torch.Tensor]], List[torch.Tensor]]] = None,
+        collate_fn: Optional[Callable] = None,
+        target_transformer: Optional[AbstractTransform] = None,
+        learning_rate: float = 1e-3,
+        early_stopping_patience: int = 13,
+        batch_size: int = 256,
+        num_epochs: int = 100,
+        l2_weight: float = 1e-4,
+    ):
         super(TorchModel, self).__init__()
         self.base_module = base_module
         self.target_transformer = target_transformer
@@ -89,8 +91,9 @@ class TorchModel(TarfileSerialisationBaseModel):
             y_pred = self.target_transformer.inverse_transform(y_pred)
         return y_pred
 
-    def predict(self, dataset_x: AbstractDataSource, batch_size: int = 256,
-                row_names: List[AnyStr] = None) -> List[np.ndarray]:
+    def predict(
+        self, dataset_x: AbstractDataSource, batch_size: int = 256, row_names: List[AnyStr] = None
+    ) -> List[np.ndarray]:
         if self.model is None:
             self.model = self.build()
         if row_names is None:
@@ -124,9 +127,13 @@ class TorchModel(TarfileSerialisationBaseModel):
         )
         return loader
 
-    def fit(self, train_x: AbstractDataSource, train_y: Optional[AbstractDataSource] = None,
-            validation_set_x: Optional[AbstractDataSource] = None,
-            validation_set_y: Optional[AbstractDataSource] = None) -> AbstractBaseModel:
+    def fit(
+        self,
+        train_x: AbstractDataSource,
+        train_y: Optional[AbstractDataSource] = None,
+        validation_set_x: Optional[AbstractDataSource] = None,
+        validation_set_y: Optional[AbstractDataSource] = None,
+    ) -> AbstractBaseModel:
         if self.model is None:
             self.model = self.build()
 
@@ -143,7 +150,7 @@ class TorchModel(TarfileSerialisationBaseModel):
             loader_val = self._make_loader(validation_set.to_torch())
 
         optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate, weight_decay=self.l2_weight)
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = self.model.to(device)
 
         def get_output_and_loss(model_inputs, model_labels):
@@ -202,8 +209,10 @@ class TorchModel(TarfileSerialisationBaseModel):
                 num_epochs_no_improvement += 1
 
             epoch_duration = time() - start_time
-            info(f"Epoch {epoch+1:d}/{self.num_epochs:d} [{epoch_duration:.2f}s]: "
-                 f"loss = {train_loss:.4f}, val_loss = {val_loss:.4f}")
+            info(
+                f"Epoch {epoch+1:d}/{self.num_epochs:d} [{epoch_duration:.2f}s]: "
+                f"loss = {train_loss:.4f}, val_loss = {val_loss:.4f}"
+            )
 
             if num_epochs_no_improvement >= self.early_stopping_patience:
                 break
@@ -256,16 +265,10 @@ class TorchModel(TarfileSerialisationBaseModel):
 
     def save_folder(self, save_folder_path, overwrite=True):
         self.save_config(
-            save_folder_path,
-            self.get_config(deep=False),
-            self.get_config_file_name(),
-            overwrite,
-            self.__class__
+            save_folder_path, self.get_config(deep=False), self.get_config_file_name(), overwrite, self.__class__
         )
         model_save_path = os.path.join(save_folder_path, self.get_model_save_file_name())
-        torch.save(
-            self.model.state_dict(), model_save_path
-        )
+        torch.save(self.model.state_dict(), model_save_path)
 
         base_module_path = os.path.join(save_folder_path, self.get_base_module_save_file_name())
         with open(base_module_path, "wb") as save_file:

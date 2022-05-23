@@ -70,8 +70,11 @@ class TarfileSerialisationBaseModel(AbstractBaseModel):
         shutil.rmtree(temp_dir)
 
     def save_config(self, directory_path, config, config_file_name, overwrite, outer_class):
-        already_exists_exception_message = "__directory_path__ already contains a saved" + outer_class.__name__ + \
-                                           " instance and __overwrite__ was set to __False__. Conflicting file: {}"
+        already_exists_exception_message = (
+            "__directory_path__ already contains a saved"
+            + outer_class.__name__
+            + " instance and __overwrite__ was set to __False__. Conflicting file: {}"
+        )
         config_file_path = os.path.join(directory_path, config_file_name)
         if os.path.exists(config_file_path) and not overwrite:
             raise ValueError(already_exists_exception_message.format(config_file_path))

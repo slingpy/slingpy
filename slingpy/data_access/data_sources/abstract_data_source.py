@@ -30,6 +30,7 @@ class AbstractDataSource(ArgumentDictionary):
     """
     An abstract base data source.
     """
+
     def __init__(self, included_indices: List[int], row_index: Optional = None):
         self.included_indices = included_indices
         self.row_index = row_index
@@ -39,8 +40,10 @@ class AbstractDataSource(ArgumentDictionary):
         for key in d1.keys():
             if key not in d2:
                 return False
-            elif np.any(d1[key] != d2[key]) and not ((isinstance(d1[key], float) and np.isnan(d1[key])) and
-                                                     (isinstance(d2[key], float) and np.isnan(d2[key]))):
+            elif np.any(d1[key] != d2[key]) and not (
+                (isinstance(d1[key], float) and np.isnan(d1[key]))
+                and (isinstance(d2[key], float) and np.isnan(d2[key]))
+            ):
                 # Consider (NaN == NaN) = True for dict comparison.
                 return False
         return True
@@ -104,8 +107,7 @@ class AbstractDataSource(ArgumentDictionary):
             accessed individually by index or name instead.
         """
         if row_names:
-            ret_val = list(map(lambda x: np.stack(x), zip(*[self.get_by_row_name(row_name)
-                                                            for row_name in row_names])))
+            ret_val = list(map(lambda x: np.stack(x), zip(*[self.get_by_row_name(row_name) for row_name in row_names])))
             return ret_val
         else:
             return self._get_data()
