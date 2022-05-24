@@ -15,10 +15,11 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import numpy as np
 from typing import List
-from slingpy.data_access.merge_strategies.abstract_merge_strategy import \
-    AbstractMergeStrategy
+
+import numpy as np
+
+from slingpy.data_access.merge_strategies.abstract_merge_strategy import AbstractMergeStrategy
 
 
 class ConcatenateMergeStrategy(AbstractMergeStrategy):

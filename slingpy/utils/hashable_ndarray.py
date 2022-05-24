@@ -15,12 +15,13 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import xxhash
 import numpy as np
+import xxhash
 
 
 class HashableArray(np.ndarray):
-    """ A hashable np.ndarray for use in caches or as dictionary keys. """
+    """A hashable np.ndarray for use in caches or as dictionary keys."""
+
     def __hash__(self):
         h = xxhash.xxh64()
         h.update(np.copy(self))

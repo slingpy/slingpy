@@ -16,13 +16,15 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
-import six
-import time
 import pickle
+import time
 import traceback
-from dataclasses import dataclass
 from abc import ABCMeta, abstractmethod
-from typing import Dict, Any, AnyStr, Tuple, Optional
+from dataclasses import dataclass
+from typing import Any, AnyStr, Dict, Optional, Tuple
+
+import six
+
 from slingpy.utils.argument_dictionary import ArgumentDictionary
 
 
@@ -57,6 +59,7 @@ class AbstractRunPolicy(ArgumentDictionary):
     """
     Abstract base class for runnable policies.
     """
+
     @abstractmethod
     def _run(self, **kwargs) -> RunResult:
         """
@@ -88,8 +91,9 @@ class AbstractRunPolicy(ArgumentDictionary):
         return False
 
     @staticmethod
-    def run_with_file_output(inputs: Tuple[int, Dict], base_policy: "AbstractRunPolicy",
-                             is_parallel: bool = True) -> Tuple[int, AnyStr]:
+    def run_with_file_output(
+        inputs: Tuple[int, Dict], base_policy: "AbstractRunPolicy", is_parallel: bool = True
+    ) -> Tuple[int, AnyStr]:
         """
         Runnable wrapper static function for use with __functools.partial__ and pool executors.
 

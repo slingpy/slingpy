@@ -15,11 +15,13 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import numpy as np
-from itertools import chain
-from functools import reduce
 from collections import OrderedDict
-from typing import List, Any, NoReturn, AnyStr, Dict, Tuple, Union, Optional
+from functools import reduce
+from itertools import chain
+from typing import Any, AnyStr, Dict, List, NoReturn, Optional, Tuple, Union
+
+import numpy as np
+
 from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
 
 
@@ -27,16 +29,21 @@ class CompositeDataSource(AbstractDataSource):
     """
     A composite data source aggregating multiple sub-data sources with items potentially sharing the same row names.
     """
-    def __init__(self, data_sources: List[AbstractDataSource], included_indices: Optional[List[int]] = None,
-                 flatten: bool = False):
+
+    def __init__(
+        self,
+        data_sources: List[AbstractDataSource],
+        included_indices: Optional[List[int]] = None,
+        flatten: bool = False,
+    ):
         self.flatten = flatten
         self.data_sources = data_sources
         self._build_row_index()
         if included_indices is None:
             # Include all indices in sub data sources by default.
-            all_keys = sorted(set(
-                chain.from_iterable([data_source.get_row_names() for data_source in self.data_sources])
-            ))
+            all_keys = sorted(
+                set(chain.from_iterable([data_source.get_row_names() for data_source in self.data_sources]))
+            )
             included_indices = list(chain.from_iterable([self.row_index[k] for k in all_keys]))
         super(CompositeDataSource, self).__init__(included_indices=included_indices, row_index=self.row_index)
         self._check_included_ids_format()
@@ -50,14 +57,16 @@ class CompositeDataSource(AbstractDataSource):
     def _get_data(self) -> List[np.ndarray]:
         all_data = [self[idx] for idx in range(len(self))]
         all_data = list(map(lambda x: np.stack(x), zip(*all_data)))
-        assert np.alltrue(np.equal(list(map(len, all_data)), len(self))), \
-            "The returned data should have __len(self)__ rows."
+        assert np.alltrue(
+            np.equal(list(map(len, all_data)), len(self))
+        ), "The returned data should have __len(self)__ rows."
         return all_data
 
     def _check_included_ids_format(self) -> NoReturn:
         all_identifiers = set(range(len(self.reverse_row_index)))
-        assert set(self.included_indices).issubset(all_identifiers), \
-            "All included IDs must be present in the identifier list."
+        assert set(self.included_indices).issubset(
+            all_identifiers
+        ), "All included IDs must be present in the identifier list."
 
     @staticmethod
     def _increment_state(state, lengths):
@@ -88,7 +97,7 @@ class CompositeDataSource(AbstractDataSource):
             for key in keys:
                 vals = list(map(lambda x: x.get_by_row_name(key), self.data_sources))
                 lengths = list(map(lambda x: max(len(x), 1), vals))
-                combinations = reduce(lambda a, b: a*b, lengths)
+                combinations = reduce(lambda a, b: a * b, lengths)
                 state = [0 for _ in range(len(lengths))]
 
                 self.offset_index[self.row_index[key][0]] = state
@@ -112,13 +121,13 @@ class CompositeDataSource(AbstractDataSource):
         if self.flatten:
             state = self.offset_index[forwarded_index]
         else:
-            state = [0]*len(self.data_sources)
+            state = [0] * len(self.data_sources)
 
         values = []
         for this_idx, data_source in zip(state, self.data_sources):
             value = data_source.get_by_row_name(name_for_index)
             if self.flatten:
-                value = value[this_idx:this_idx+1]
+                value = value[this_idx : this_idx + 1]
             values.append(value)
         return list(chain.from_iterable(values))
 

@@ -16,13 +16,15 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
-import sys
-import six
 import subprocess
-from argparse import ArgumentParser
-from slingpy.utils.logging import info
+import sys
 from abc import ABCMeta, abstractmethod
-from typing import Set, Optional, AnyStr, Dict, Tuple
+from argparse import ArgumentParser
+from typing import AnyStr, Dict, Optional, Set, Tuple
+
+import six
+
+from slingpy.utils.logging import info
 
 
 @six.add_metaclass(ABCMeta)
@@ -40,7 +42,7 @@ class AbstractScheduler(object):
 
     @staticmethod
     def convert_arguments_dict_to_program_argument_string(
-            parser: ArgumentParser, kwargs: Dict, exclude: Optional[Set] = None
+        parser: ArgumentParser, kwargs: Dict, exclude: Optional[Set] = None
     ) -> AnyStr:
         """
         Converts a dictionary of program arguments to an argument string that may be passed on command line.
@@ -74,6 +76,13 @@ class AbstractScheduler(object):
 
     @staticmethod
     @abstractmethod
-    def execute(clazz, mem_limit_in_mb: int = 2048, num_cpus: int = 1, virtualenv_path: AnyStr = "",
-                project_dir_path: AnyStr = "", exclude: AnyStr = "", **kwargs):
+    def execute(
+        clazz,
+        mem_limit_in_mb: int = 2048,
+        num_cpus: int = 1,
+        virtualenv_path: AnyStr = "",
+        project_dir_path: AnyStr = "",
+        exclude: AnyStr = "",
+        **kwargs,
+    ):
         raise NotImplementedError()

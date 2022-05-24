@@ -17,12 +17,15 @@ DEALINGS IN THE SOFTWARE.
 """
 import os
 from contextlib import contextmanager
+
 from ilock import ILock
+
 from slingpy.utils.logging import warn
 
 
 class PathTools(object):
-    """ Tools for manipulating file paths. """
+    """Tools for manipulating file paths."""
+
     @staticmethod
     def mkdir_if_not_exists(new_dir, raise_error_if_exists: bool = False):
         """

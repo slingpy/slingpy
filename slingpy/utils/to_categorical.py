@@ -19,7 +19,7 @@ import numpy as np
 
 
 def to_categorical(arr: np.ndarray, num_classes: int, fill_value: float = 0):
-    """ Converts an array of class indices into its one-hot encoded form. """
+    """Converts an array of class indices into its one-hot encoded form."""
     one_hot_targets = np.eye(num_classes)[arr]
     if fill_value != 0:
         if fill_value == 1:

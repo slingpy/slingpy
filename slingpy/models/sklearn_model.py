@@ -15,20 +15,25 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from typing import AnyStr, List, Optional
+
 import numpy as np
 from sklearn.base import BaseEstimator
-from typing import Optional, List, AnyStr
-from slingpy.utils.plugin_tools import PluginTools
+
+from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
 from slingpy.data_access.merge_strategies import *
 from slingpy.models.abstract_base_model import AbstractBaseModel
 from slingpy.models.pickleable_base_model import PickleableBaseModel
-from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from slingpy.utils.plugin_tools import PluginTools
 
 
 class SklearnModel(PickleableBaseModel):
-    def __init__(self, base_module: BaseEstimator,
-                 merge_strategy_x: AbstractMergeStrategy = NoMergeStrategy(),
-                 merge_strategy_y: AbstractMergeStrategy = NoMergeStrategy()):
+    def __init__(
+        self,
+        base_module: BaseEstimator,
+        merge_strategy_x: AbstractMergeStrategy = NoMergeStrategy(),
+        merge_strategy_y: AbstractMergeStrategy = NoMergeStrategy(),
+    ):
         super(SklearnModel, self).__init__()
         self.base_module = base_module
         self.merge_strategy_x = merge_strategy_x
@@ -48,8 +53,9 @@ class SklearnModel(PickleableBaseModel):
             y_pred = self.model.predict(data)
         return y_pred
 
-    def predict(self, dataset_x: AbstractDataSource, batch_size: int = 256,
-                row_names: List[AnyStr] = None) -> List[np.ndarray]:
+    def predict(
+        self, dataset_x: AbstractDataSource, batch_size: int = 256, row_names: List[AnyStr] = None
+    ) -> List[np.ndarray]:
         if self.model is None:
             self.model = self.build()
         if row_names is None:
@@ -70,9 +76,13 @@ class SklearnModel(PickleableBaseModel):
         else:
             return []
 
-    def fit(self, train_x: AbstractDataSource, train_y: Optional[AbstractDataSource] = None,
-            validation_set_x: Optional[AbstractDataSource] = None,
-            validation_set_y: Optional[AbstractDataSource] = None) -> "AbstractBaseModel":
+    def fit(
+        self,
+        train_x: AbstractDataSource,
+        train_y: Optional[AbstractDataSource] = None,
+        validation_set_x: Optional[AbstractDataSource] = None,
+        validation_set_y: Optional[AbstractDataSource] = None,
+    ) -> "AbstractBaseModel":
         if self.model is None:
             self.model = self.build()
 

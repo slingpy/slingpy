@@ -18,11 +18,12 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import print_function
 
 import os
-import sys
 import pickle
+import sys
+
 from slingpy.apps.app_paths import AppPaths
-from slingpy.schedulers.slurm_scheduler import SlurmScheduler
 from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult
+from slingpy.schedulers.slurm_scheduler import SlurmScheduler
 
 
 class SlurmSingleRunPolicy(AbstractRunPolicy):
@@ -31,6 +32,7 @@ class SlurmSingleRunPolicy(AbstractRunPolicy):
     entry point. Dependencies are loaded via a virtualenv that must be defined in
     __base_policy.remote_execution_virtualenv_path__.
     """
+
     def __init__(self, base_policy: "AbstractBaseApplication", app_paths: AppPaths):
         self.app_paths = app_paths
         """ A reference to the application paths object. """
@@ -47,15 +49,17 @@ class SlurmSingleRunPolicy(AbstractRunPolicy):
         output_directory = kwargs["output_directory"]
 
         kwargs["single_run"] = True
-        contents, err_contents = SlurmScheduler.execute(self.base_policy.__class__,
-                                                        time_limit_days=time_limit_days,
-                                                        time_limit_hours=time_limit_hours,
-                                                        num_cpus=num_cpus,
-                                                        mem_limit_in_mb=mem_limit_in_mb,
-                                                        virtualenv_path=virtualenv_path,
-                                                        project_dir_path=self.app_paths.project_root_directory,
-                                                        output_directory=output_directory,
-                                                        program_arguments=kwargs)
+        contents, err_contents = SlurmScheduler.execute(
+            self.base_policy.__class__,
+            time_limit_days=time_limit_days,
+            time_limit_hours=time_limit_hours,
+            num_cpus=num_cpus,
+            mem_limit_in_mb=mem_limit_in_mb,
+            virtualenv_path=virtualenv_path,
+            project_dir_path=self.app_paths.project_root_directory,
+            output_directory=output_directory,
+            program_arguments=kwargs,
+        )
 
         if os.path.isfile(contents):
             with open(contents, "r") as fp:

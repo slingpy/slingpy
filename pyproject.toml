@@ -4,3 +4,15 @@ requires = [
     "wheel"
 ]
 build-backend = "setuptools.build_meta"
+
+[tool.black]
+# Documentation: https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
+line-length = 120
+target-version = ["py38"]
+
+[tool.isort]
+# Documentation: https://pycqa.github.io/isort/docs/configuration/config_files.html
+# See also: https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html?highlight=line%20length#isort
+profile="black"
+skip_gitignore="true"
+line_length=120

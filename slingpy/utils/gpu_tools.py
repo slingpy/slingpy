@@ -15,15 +15,16 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import torch
 from typing import AnyStr, List
+
+import torch
 
 
 def get_gpu_devices() -> List[AnyStr]:
-    """ Get the available GPU devices. """
+    """Get the available GPU devices."""
     return [torch.cuda.get_device_name(idx) for idx in range(torch.cuda.device_count())]
 
 
 def get_num_available_gpus():
-    """ Get the number of available GPUs. """
+    """Get the number of available GPUs."""
     return len(get_gpu_devices())

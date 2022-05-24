@@ -16,23 +16,33 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
-from typing import AnyStr, List, Dict
+from typing import AnyStr, Dict, List
+
 from slingpy.apps.app_paths import AppPaths
-from slingpy.utils.metric_dict_tools import MetricDictTools
-from slingpy.apps.run_policies.composite_run_policy import CompositeRunPolicy
 from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult, RunResultWithMetaData
+from slingpy.apps.run_policies.composite_run_policy import CompositeRunPolicy
+from slingpy.utils.metric_dict_tools import MetricDictTools
 
 
 class CrossValidationRunPolicy(CompositeRunPolicy):
     """
     A run policy for cross validated runs. Can be nested to allow for nested cross validation.
     """
-    def __init__(self, base_policy: AbstractRunPolicy, evaluate_against, app_paths: AppPaths,
-                 cross_validation_name: AnyStr = "inner", run_parallel: bool = False,
-                 max_num_parallel_runs: int = 10):
+
+    def __init__(
+        self,
+        base_policy: AbstractRunPolicy,
+        evaluate_against,
+        app_paths: AppPaths,
+        cross_validation_name: AnyStr = "inner",
+        run_parallel: bool = False,
+        max_num_parallel_runs: int = 10,
+    ):
         super(CrossValidationRunPolicy, self).__init__(
-            base_policy=base_policy, app_paths=app_paths,
-            run_parallel=run_parallel, max_num_parallel_runs=max_num_parallel_runs
+            base_policy=base_policy,
+            app_paths=app_paths,
+            run_parallel=run_parallel,
+            max_num_parallel_runs=max_num_parallel_runs,
         )
         self.evaluate_against = evaluate_against
         """ The fold to evaluate against. One of ('val' or 'test'). """
@@ -59,8 +69,9 @@ class CrossValidationRunPolicy(CompositeRunPolicy):
         for split_index_inner in range(num_splits_inner):
             new_kwargs = dict(original_arguments)
             new_kwargs[split_index_name] = split_index_inner
-            new_kwargs["output_directory"] = os.path.join(output_directory_before,
-                                                          f"{self.cross_validation_name}_{split_index_inner:d}")
+            new_kwargs["output_directory"] = os.path.join(
+                output_directory_before, f"{self.cross_validation_name}_{split_index_inner:d}"
+            )
             if not os.path.exists(new_kwargs["output_directory"]):
                 os.mkdir(new_kwargs["output_directory"])
             all_kwargs.append(new_kwargs)

@@ -17,22 +17,33 @@ DEALINGS IN THE SOFTWARE.
 """
 import os
 import pickle
-from typing import List, Dict
-from functools import partial
 from abc import abstractmethod
-from slingpy.utils.logging import error
+from functools import partial
+from typing import Dict, List
+
 from slingpy.apps.app_paths import AppPaths
+from slingpy.apps.run_policies.abstract_run_policy import (
+    AbstractRunPolicy,
+    RunResult,
+    RunResultWithMetaData,
+    TracebackException,
+)
+from slingpy.utils.logging import error
 from slingpy.utils.nestable_pool import NestablePool as Pool
-from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult, RunResultWithMetaData, \
-    TracebackException
 
 
 class CompositeRunPolicy(AbstractRunPolicy):
     """
     A composite run policy that executes multiple child policies.
     """
-    def __init__(self, base_policy: AbstractRunPolicy, app_paths: AppPaths,
-                 run_parallel: bool = False, max_num_parallel_runs: int = 10):
+
+    def __init__(
+        self,
+        base_policy: AbstractRunPolicy,
+        app_paths: AppPaths,
+        run_parallel: bool = False,
+        max_num_parallel_runs: int = 10,
+    ):
         self.app_paths = app_paths
         """ A reference to the application paths object. """
         self.base_policy = base_policy
@@ -40,7 +51,7 @@ class CompositeRunPolicy(AbstractRunPolicy):
         self.run_parallel = run_parallel
         """ Whether or not to run the base policy in parallel asynchronous execution or sequentially. """
         self.max_num_parallel_runs = max_num_parallel_runs
-        """ The maximum number of parallel runs that will be executed asynchronously. 
+        """ The maximum number of parallel runs that will be executed asynchronously.
         Only has an effect if __run_parallel__ is set to True. """
         self.total_runtime_in_seconds = 0
 
@@ -99,21 +110,29 @@ class CompositeRunPolicy(AbstractRunPolicy):
             num_processes = 1
 
         if not self.run_parallel:
-            result_dicts = list(map(
-                partial(AbstractRunPolicy.run_with_file_output,
+            result_dicts = list(
+                map(
+                    partial(
+                        AbstractRunPolicy.run_with_file_output,
                         base_policy=self.base_policy,
-                        is_parallel=self.run_parallel),
-                zip(range(len(all_kwargs)), all_kwargs)
-            ))
+                        is_parallel=self.run_parallel,
+                    ),
+                    zip(range(len(all_kwargs)), all_kwargs),
+                )
+            )
         else:
             with Pool(processes=num_processes) as pool:
-                result_dicts = list(pool.imap_unordered(
-                    partial(AbstractRunPolicy.run_with_file_output,
+                result_dicts = list(
+                    pool.imap_unordered(
+                        partial(
+                            AbstractRunPolicy.run_with_file_output,
                             base_policy=self.base_policy,
-                            is_parallel=self.run_parallel),
-                    zip(range(len(all_kwargs)), all_kwargs),
-                    chunksize=1
-                ))
+                            is_parallel=self.run_parallel,
+                        ),
+                        zip(range(len(all_kwargs)), all_kwargs),
+                        chunksize=1,
+                    )
+                )
         result_dict_paths = list(map(lambda x: x[1], sorted(result_dicts, key=lambda x: x[0])))
 
         # Load the serialised results from disk.
@@ -133,7 +152,8 @@ class CompositeRunPolicy(AbstractRunPolicy):
             # Remove references from disk after aggregation.
             os.unlink(result_dict_path)
 
-        self.total_runtime_in_seconds = sum([run_result.run_time if hasattr(run_result, "run_time") else 0
-                                             for run_result in run_results])
+        self.total_runtime_in_seconds = sum(
+            [run_result.run_time if hasattr(run_result, "run_time") else 0 for run_result in run_results]
+        )
         run_result = self.aggregate_results(run_results, original_arguments=kwargs)
         return run_result

@@ -16,6 +16,7 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 from typing import Callable
+
 from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult
 
 
@@ -23,6 +24,7 @@ class LocalSingleRunPolicy(AbstractRunPolicy):
     """
     A runnable policy for locally executed runs.
     """
+
     def __init__(self, base_policy_fun: Callable[..., RunResult]):
         self.base_policy_fun = base_policy_fun
         """ A reference to the application paths object. """

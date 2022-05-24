@@ -16,9 +16,11 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
-import uuid
 import pathlib
+import uuid
+
 import requests
+
 from slingpy.utils.path_tools import PathTools
 
 

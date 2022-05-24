@@ -17,10 +17,11 @@ DEALINGS IN THE SOFTWARE.
 """
 import os
 import sys
-import numpy as np
-from typing import Tuple, Dict, List
-from slingpy.utils.logging import info, error
+from typing import Dict, List, Tuple
 
+import numpy as np
+
+from slingpy.utils.logging import error, info
 
 if sys.version_info < (3, 0, 0):
     import cPickle as pickle
@@ -33,6 +34,7 @@ class MetricDictTools(object):
     Tools for working with metric dictionaries, i.e. dictionaries in which each entry consists of a named evaluation
     metric and one or more associated metric values.
     """
+
     @staticmethod
     def aggregate_metric_dicts(eval_scores: List[Dict], test_scores: List[Dict]) -> Tuple[Dict, Dict]:
         """
@@ -99,10 +101,23 @@ class MetricDictTools(object):
         for key in metric_dicts[0].keys():
             try:
                 values = list(map(lambda x: x[key], metric_dicts))
-                info(key, "=", np.mean(values), "+-", np.std(values),
-                     "CI=(", np.percentile(values, 2.5), ",", np.percentile(values, 97.5), "),",
-                     "median=", np.median(values),
-                     "min=", np.min(values),
-                     "max=", np.max(values))
+                info(
+                    key,
+                    "=",
+                    np.mean(values),
+                    "+-",
+                    np.std(values),
+                    "CI=(",
+                    np.percentile(values, 2.5),
+                    ",",
+                    np.percentile(values, 97.5),
+                    "),",
+                    "median=",
+                    np.median(values),
+                    "min=",
+                    np.min(values),
+                    "max=",
+                    np.max(values),
+                )
             except:
                 error("Could not get key", key, "for all metric dicts.")

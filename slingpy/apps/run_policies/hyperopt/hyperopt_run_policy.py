@@ -17,37 +17,47 @@ DEALINGS IN THE SOFTWARE.
 """
 import os
 import shutil
-import numpy as np
 from distutils.dir_util import copy_tree
+from typing import AnyStr, Dict, List, Tuple, Union
+
+import numpy as np
+
 from slingpy.apps.app_paths import AppPaths
-from slingpy.utils.logging import info, warn
-from slingpy.utils.path_tools import PathTools
-from typing import Tuple, Dict, Union, List, AnyStr
-from slingpy.utils.metric_dict_tools import MetricDictTools
+from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult, RunResultWithMetaData
 from slingpy.apps.run_policies.composite_run_policy import CompositeRunPolicy
 from slingpy.apps.run_policies.hyperopt.exploration import AbstractExplorationStrategy
-from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult, RunResultWithMetaData
+from slingpy.utils.logging import info, warn
+from slingpy.utils.metric_dict_tools import MetricDictTools
+from slingpy.utils.path_tools import PathTools
 
 
 class HyperoptRunPolicy(CompositeRunPolicy):
     """
     A runnable policy for hyper-parameter optimisation.
     """
-    def __init__(self, base_policy: AbstractRunPolicy, app_paths: AppPaths,
-                 hyperopt_params: Dict[AnyStr, Union[List, Tuple]],
-                 exploration_strategy: AbstractExplorationStrategy,
-                 max_num_hyperopt_runs: int, run_parallel: bool = False,
-                 max_num_parallel_runs: int = 10):
+
+    def __init__(
+        self,
+        base_policy: AbstractRunPolicy,
+        app_paths: AppPaths,
+        hyperopt_params: Dict[AnyStr, Union[List, Tuple]],
+        exploration_strategy: AbstractExplorationStrategy,
+        max_num_hyperopt_runs: int,
+        run_parallel: bool = False,
+        max_num_parallel_runs: int = 10,
+    ):
         super(HyperoptRunPolicy, self).__init__(
-            base_policy=base_policy, app_paths=app_paths,
-            run_parallel=run_parallel, max_num_parallel_runs=max_num_parallel_runs
+            base_policy=base_policy,
+            app_paths=app_paths,
+            run_parallel=run_parallel,
+            max_num_parallel_runs=max_num_parallel_runs,
         )
         self.hyperopt_params = hyperopt_params
         """ The hyperopt parameters. """
         self.exploration_strategy = exploration_strategy
         """ The exploration strategy used. """
         self.max_num_hyperopt_runs = max_num_hyperopt_runs
-        """ Maximum number of hyper-parameter optimization trials to run. 
+        """ Maximum number of hyper-parameter optimization trials to run.
         Note fewer trials are run if the number of all possible combinations of hyper-parameters is smaller than
         __self.max_num_hyperopt_runs__. """
         self.best_score_index = 0
@@ -140,8 +150,10 @@ class HyperoptRunPolicy(CompositeRunPolicy):
         if "hyperopt_comparison_operator" in original_arguments:
             hyperopt_comparator = original_arguments["hyperopt_comparison_operator"]
             if hyperopt_comparator not in ["<", ">"]:
-                raise NotImplementedError(f"Hyperopt comparison operator {hyperopt_comparator} does not exist. "
-                                          f"Should be one of '<' or '>'.")
+                raise NotImplementedError(
+                    f"Hyperopt comparison operator {hyperopt_comparator} does not exist. "
+                    f"Should be one of '<' or '>'."
+                )
         hyperopt_metric_name = original_arguments["hyperopt_metric_name"]
         best_output_directory = self.get_best_output_directory(original_arguments)
         final_output_directory = self.get_final_output_directory(original_arguments)
@@ -156,12 +168,14 @@ class HyperoptRunPolicy(CompositeRunPolicy):
             eval_dict = results_w_metadata.run_result.validation_scores
             score = eval_dict[hyperopt_metric_name]
 
-            best_params_message = HyperoptRunPolicy.print_run_results(results_w_metadata.arguments,
-                                                                      self.hyperopt_params,
-                                                                      i, score, results_w_metadata.run_time)
+            best_params_message = HyperoptRunPolicy.print_run_results(
+                results_w_metadata.arguments, self.hyperopt_params, i, score, results_w_metadata.run_time
+            )
             current_output_directory = results_w_metadata.arguments["output_directory"]
-            if ((hyperopt_comparator == ">" and score > self.best_score) or
-                (hyperopt_comparator == "<" and score < self.best_score)) and original_arguments["train"]:
+            if (
+                (hyperopt_comparator == ">" and score > self.best_score)
+                or (hyperopt_comparator == "<" and score < self.best_score)
+            ) and original_arguments["train"]:
                 self.best_score_index = i
                 self.best_score = score
                 self.best_params = best_params_message
@@ -169,8 +183,10 @@ class HyperoptRunPolicy(CompositeRunPolicy):
                 if os.path.isdir(current_output_directory):
                     copy_tree(current_output_directory, best_output_directory)
                 else:
-                    warn(f"Not moving {current_output_directory} to {best_output_directory} due to "
-                         "unexpected or missing folder structure.")
+                    warn(
+                        f"Not moving {current_output_directory} to {best_output_directory} due to "
+                        "unexpected or missing folder structure."
+                    )
 
             if os.path.isdir(current_output_directory):
                 shutil.rmtree(current_output_directory)
@@ -184,25 +200,31 @@ class HyperoptRunPolicy(CompositeRunPolicy):
             copy_tree(best_output_directory, final_output_directory)
             shutil.rmtree(best_output_directory)  # Remove best directory.
         else:
-            warn(f"Not moving {best_output_directory} to {final_output_directory} due to "
-                 "unexpected or missing folder structure.")
+            warn(
+                f"Not moving {best_output_directory} to {final_output_directory} due to "
+                "unexpected or missing folder structure."
+            )
 
         MetricDictTools.print_metric_statistics(score_dicts, "Hyperopt")
 
         # Override last score dicts with best.
         output_directory = original_arguments["output_directory"]
-        MetricDictTools.save_metric_dict(score_dicts[self.best_score_index],
-                                         self.app_paths.get_eval_score_dict_path(output_directory))
-        MetricDictTools.save_metric_dict(test_score_dicts[self.best_score_index],
-                                         self.app_paths.get_test_score_dict_path(output_directory))
+        MetricDictTools.save_metric_dict(
+            score_dicts[self.best_score_index], self.app_paths.get_eval_score_dict_path(output_directory)
+        )
+        MetricDictTools.save_metric_dict(
+            test_score_dicts[self.best_score_index], self.app_paths.get_test_score_dict_path(output_directory)
+        )
 
         if len(score_dicts) != 0:
             root_size = len(best_output_directory.split(os.path.sep))
             path_postfix = model_paths[self.best_score_index].split(os.path.sep)[root_size:]
             path_postfix = os.path.sep.join(path_postfix)
             model_path = os.path.join(final_output_directory, path_postfix)
-            return RunResult(validation_scores=score_dicts[self.best_score_index],
-                             test_scores=test_score_dicts[self.best_score_index],
-                             model_path=model_path)
+            return RunResult(
+                validation_scores=score_dicts[self.best_score_index],
+                test_scores=test_score_dicts[self.best_score_index],
+                model_path=model_path,
+            )
         else:
             return RunResult({}, {}, model_path=None)

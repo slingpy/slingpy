@@ -15,20 +15,22 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import os
 import glob
-import pickle
 import inspect
-import numpy as np
+import os
+import pickle
 from abc import abstractmethod
 from dataclasses import dataclass
-from slingpy.utils.path_tools import PathTools
-from slingpy.data_access.merge_strategies import *
-from slingpy.data_access.data_sources.hdf5_tools import HDF5Tools
-from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
-from typing import List, AnyStr, Dict, Tuple, Union, Optional, Set, Generator
-from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from typing import AnyStr, Dict, Generator, List, Optional, Set, Tuple, Union
+
+import numpy as np
+
 from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult
+from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
+from slingpy.data_access.data_sources.hdf5_tools import HDF5Tools
+from slingpy.data_access.merge_strategies import *
+from slingpy.utils.path_tools import PathTools
 
 
 @dataclass()
@@ -47,9 +49,15 @@ class AbstractHDF5Dataset(AbstractRunPolicy, AbstractDataSource):
     """
     NOTE: All __init__ arguments are expected to be __hash()__-able for caching.
     """
-    def __init__(self, save_directory: AnyStr, in_memory: bool = False,
-                 fill_missing: bool = True, fill_missing_value: float = float("nan"),
-                 duplicate_merge_strategy: AbstractMergeStrategy = NoMergeStrategy()):
+
+    def __init__(
+        self,
+        save_directory: AnyStr,
+        in_memory: bool = False,
+        fill_missing: bool = True,
+        fill_missing_value: float = float("nan"),
+        duplicate_merge_strategy: AbstractMergeStrategy = NoMergeStrategy(),
+    ):
         super(AbstractHDF5Dataset, self).__init__(included_indices=[])
         self.save_directory = save_directory
         self._data_source = None
@@ -81,11 +89,12 @@ class AbstractHDF5Dataset(AbstractRunPolicy, AbstractDataSource):
         raise NotImplementedError()
 
     def get_ignored_param_names(self) -> Set[AnyStr]:
-        init = getattr(HDF5DataSource.__init__, 'deprecated_original', HDF5DataSource.__init__)
+        init = getattr(HDF5DataSource.__init__, "deprecated_original", HDF5DataSource.__init__)
         init_signature = inspect.signature(init)
-        param_names = set([p.name for p in init_signature.parameters.values()
-                           if p.name != 'self' and p.kind != p.VAR_KEYWORD])
-        param_names -= {'hdf5_file', 'included_indices'}
+        param_names = set(
+            [p.name for p in init_signature.parameters.values() if p.name != "self" and p.kind != p.VAR_KEYWORD]
+        )
+        param_names -= {"hdf5_file", "included_indices"}
         param_names = param_names.union({"save_directory"})
         return param_names
 
@@ -137,8 +146,9 @@ class AbstractHDF5Dataset(AbstractRunPolicy, AbstractDataSource):
     def load(self) -> HDF5DataSource:
         # Search by argument hash.
         ignored_params = self.get_ignored_param_names()
-        folder_path = os.path.join(self.save_directory, f"{type(self).__name__}_"
-                                                        f"{self.get_params_hash(ignored_params)}")
+        folder_path = os.path.join(
+            self.save_directory, f"{type(self).__name__}_" f"{self.get_params_hash(ignored_params)}"
+        )
         with PathTools.ilock_nothrow(folder_path, self.save_directory):
             if not os.path.exists(folder_path):
                 PathTools.mkdir_if_not_exists(folder_path)
@@ -150,29 +160,35 @@ class AbstractHDF5Dataset(AbstractRunPolicy, AbstractDataSource):
                 load_result = self._load()
 
                 if isinstance(load_result.data, Generator):
-                    HDF5Tools.save_h5_file_streamed(h5_file_path,
-                                                    generator=load_result.data,
-                                                    generator_steps=load_result.num_generator_steps,
-                                                    generated_shape=load_result.generated_shape,
-                                                    dataset_name=load_result.name,
-                                                    dataset_version=load_result.version,
-                                                    column_names=load_result.column_names,
-                                                    column_code_lists=load_result.column_code_lists)
+                    HDF5Tools.save_h5_file_streamed(
+                        h5_file_path,
+                        generator=load_result.data,
+                        generator_steps=load_result.num_generator_steps,
+                        generated_shape=load_result.generated_shape,
+                        dataset_name=load_result.name,
+                        dataset_version=load_result.version,
+                        column_names=load_result.column_names,
+                        column_code_lists=load_result.column_code_lists,
+                    )
                 else:
-                    HDF5Tools.save_h5_file(h5_file_path,
-                                           load_result.data,
-                                           load_result.name,
-                                           column_names=load_result.column_names,
-                                           row_names=load_result.row_names,
-                                           column_code_lists=load_result.column_code_lists,
-                                           dataset_version=load_result.version)
+                    HDF5Tools.save_h5_file(
+                        h5_file_path,
+                        load_result.data,
+                        load_result.name,
+                        column_names=load_result.column_names,
+                        row_names=load_result.row_names,
+                        column_code_lists=load_result.column_code_lists,
+                        dataset_version=load_result.version,
+                    )
 
                 self._save_config(config_file_path)
-        return HDF5DataSource(h5_file_path,
-                              in_memory=self.in_memory,
-                              fill_missing=self.fill_missing,
-                              fill_missing_value=self.fill_missing_value,
-                              duplicate_merge_strategy=self.duplicate_merge_strategy)
+        return HDF5DataSource(
+            h5_file_path,
+            in_memory=self.in_memory,
+            fill_missing=self.fill_missing,
+            fill_missing_value=self.fill_missing_value,
+            duplicate_merge_strategy=self.duplicate_merge_strategy,
+        )
 
     def _save_config(self, config_file_path):
         params = self.get_params()

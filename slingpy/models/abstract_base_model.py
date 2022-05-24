@@ -15,24 +15,28 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import six
-import numpy as np
 from abc import ABCMeta, abstractmethod
-from typing import Optional, AnyStr, Type, List
-from slingpy.utils.argument_dictionary import ArgumentDictionary
+from typing import AnyStr, List, Optional, Type
+
+import numpy as np
+import six
+
 from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from slingpy.utils.argument_dictionary import ArgumentDictionary
 
 
 @six.add_metaclass(ABCMeta)
 class AbstractBaseModel(ArgumentDictionary):
-    """ An abstract base machine learning model. """
+    """An abstract base machine learning model."""
+
     def __init__(self, inputs: Optional = None, outputs: Optional = None):
         self.inputs = inputs
         self.outputs = outputs
 
     @abstractmethod
-    def predict(self, dataset_x: AbstractDataSource, batch_size: int = 256,
-                row_names: List[AnyStr] = None) -> List[np.ndarray]:
+    def predict(
+        self, dataset_x: AbstractDataSource, batch_size: int = 256, row_names: List[AnyStr] = None
+    ) -> List[np.ndarray]:
         """
         Produces model predictions for a given dataset. Can be run in batched mode to limit peak memory usage.
 
@@ -49,10 +53,13 @@ class AbstractBaseModel(ArgumentDictionary):
         raise NotImplementedError()
 
     @abstractmethod
-    def fit(self, train_x: AbstractDataSource, train_y: Optional[AbstractDataSource] = None,
-            validation_set_x: Optional[AbstractDataSource] = None,
-            validation_set_y: Optional[AbstractDataSource] = None) \
-            -> "AbstractBaseModel":
+    def fit(
+        self,
+        train_x: AbstractDataSource,
+        train_y: Optional[AbstractDataSource] = None,
+        validation_set_x: Optional[AbstractDataSource] = None,
+        validation_set_y: Optional[AbstractDataSource] = None,
+    ) -> "AbstractBaseModel":
         """
         Fits the model to a training dataset.
 
