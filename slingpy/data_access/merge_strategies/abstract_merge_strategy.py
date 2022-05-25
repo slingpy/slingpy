@@ -21,6 +21,7 @@ from typing import List
 
 import numpy as np
 
+
 class AbstractMergeStrategy(metaclass=ABCMeta):
     def __init__(self):
         super().__init__()

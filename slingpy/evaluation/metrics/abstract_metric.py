@@ -20,6 +20,8 @@ from abc import ABCMeta, abstractmethod
 from typing import AnyStr, Optional
 
 import numpy as np
+
+
 class AbstractMetric(metaclass=ABCMeta):
     """
     An abstract metric for evaluating model properties.
