@@ -24,7 +24,7 @@ from slingpy.transforms.abstract_transform import AbstractTransform
 
 class ScaleTransform(AbstractTransform):
     def __init__(self, loc: List[torch.Tensor], scale: List[torch.Tensor]):
-        super(ScaleTransform, self).__init__()
+        super().__init__()
         self.loc = loc
         self.scale = scale
 

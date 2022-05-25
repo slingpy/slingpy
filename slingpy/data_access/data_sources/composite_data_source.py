@@ -45,7 +45,7 @@ class CompositeDataSource(AbstractDataSource):
                 set(chain.from_iterable([data_source.get_row_names() for data_source in self.data_sources]))
             )
             included_indices = list(chain.from_iterable([self.row_index[k] for k in all_keys]))
-        super(CompositeDataSource, self).__init__(included_indices=included_indices, row_index=self.row_index)
+        super().__init__(included_indices=included_indices, row_index=self.row_index)
         self._check_included_ids_format()
 
     def get_shape(self) -> List[Tuple[Union[Optional[int]]]]:

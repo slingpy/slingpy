@@ -23,13 +23,10 @@ import tempfile
 from abc import ABCMeta, abstractmethod
 from typing import AnyStr, Type
 
-import six
-
 from slingpy.models.abstract_base_model import AbstractBaseModel
 
 
-@six.add_metaclass(ABCMeta)
-class TarfileSerialisationBaseModel(AbstractBaseModel):
+class TarfileSerialisationBaseModel(AbstractBaseModel, metaclass=ABCMeta):
     def get_config(self, deep=True):
         config = self.get_params(deep=deep)
         return config

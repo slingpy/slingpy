@@ -18,12 +18,10 @@ DEALINGS IN THE SOFTWARE.
 from abc import ABCMeta, abstractmethod
 from typing import List
 
-import six
 import torch
 
 
-@six.add_metaclass(ABCMeta)
-class AbstractTransform(object):
+class AbstractTransform(metaclass=ABCMeta):
     """
     An abstract transform for pre-processing data interactively.
     """

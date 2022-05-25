@@ -51,7 +51,7 @@ import unicodedata
 from typing import AnyStr
 
 
-class TextTools(object):
+class TextTools:
     """Tools for working with text strings."""
 
     @staticmethod

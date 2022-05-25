@@ -26,7 +26,7 @@ from slingpy.models.abstract_base_model import AbstractBaseModel
 from slingpy.utils.logging import info, warn
 
 
-class Evaluator(object):
+class Evaluator:
     @staticmethod
     def evaluate(
         model: AbstractBaseModel,

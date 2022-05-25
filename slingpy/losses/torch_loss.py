@@ -18,12 +18,10 @@ DEALINGS IN THE SOFTWARE.
 from abc import ABCMeta, abstractmethod
 from typing import List
 
-import six
 import torch
 
 
-@six.add_metaclass(ABCMeta)
-class TorchLoss(object):
+class TorchLoss(metaclass=ABCMeta):
     """
     An abstract loss objective for training PyTorch models.
     """

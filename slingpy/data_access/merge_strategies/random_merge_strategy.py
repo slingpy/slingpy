@@ -24,7 +24,7 @@ from slingpy.data_access.merge_strategies.abstract_merge_strategy import Abstrac
 
 class RandomMergeStrategy(AbstractMergeStrategy):
     def __init__(self, seed: int = 909):
-        super(RandomMergeStrategy, self).__init__()
+        super().__init__()
         self.seed = seed
         self.random_state = np.random.RandomState(self.seed)
 

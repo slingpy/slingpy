@@ -19,7 +19,7 @@ import os
 from typing import AnyStr
 
 
-class AppPaths(object):
+class AppPaths:
     """
     Pre-defined application paths.
     """

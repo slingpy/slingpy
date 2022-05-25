@@ -26,7 +26,7 @@ from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
 from slingpy.data_access.data_sources.hdf5_tools import HDF5Tools
 
 
-class Diabetes(object):
+class Diabetes:
     @staticmethod
     def load_data(save_directory) -> Tuple[AbstractDataSource, AbstractDataSource]:
         diabetes = load_diabetes()

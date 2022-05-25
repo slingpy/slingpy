@@ -27,7 +27,7 @@ from slingpy.utils.iterative_stratification import IterativeStratification
 from slingpy.utils.to_categorical import to_categorical
 
 
-class StratifiedSplit(object):
+class StratifiedSplit:
     @staticmethod
     def make_synthetic_labels_for_stratification(num_bins=5, max_num_unique_values=10, label_candidates=list([])):
         synthetic_labels = []

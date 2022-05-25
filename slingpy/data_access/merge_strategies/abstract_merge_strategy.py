@@ -20,13 +20,11 @@ from abc import ABCMeta, abstractmethod
 from typing import List
 
 import numpy as np
-import six
 
 
-@six.add_metaclass(ABCMeta)
-class AbstractMergeStrategy(object):
+class AbstractMergeStrategy(metaclass=ABCMeta):
     def __init__(self):
-        super(AbstractMergeStrategy, self).__init__()
+        super().__init__()
 
     def __hash__(self):
         m = hashlib.sha256()

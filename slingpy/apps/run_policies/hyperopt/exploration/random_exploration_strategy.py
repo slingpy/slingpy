@@ -28,7 +28,7 @@ class RandomExplorationStrategy(AbstractExplorationStrategy):
     """
 
     def __init__(self, hyperopt_param_ranges: Dict[AnyStr, Union[List, Tuple]], seed: int = 909):
-        super(RandomExplorationStrategy, self).__init__(hyperopt_param_ranges=hyperopt_param_ranges)
+        super().__init__(hyperopt_param_ranges=hyperopt_param_ranges)
         self.random_state = np.random.RandomState(seed)
 
     def next(self, state: Any) -> Any:

@@ -34,7 +34,7 @@ from slingpy.utils.path_tools import PathTools
 
 
 @dataclass()
-class DatasetLoadResult(object):
+class DatasetLoadResult:
     data: Union[np.ndarray, Generator]
     name: AnyStr
     column_names: List[AnyStr]
@@ -58,7 +58,7 @@ class AbstractHDF5Dataset(AbstractRunPolicy, AbstractDataSource):
         fill_missing_value: float = float("nan"),
         duplicate_merge_strategy: AbstractMergeStrategy = NoMergeStrategy(),
     ):
-        super(AbstractHDF5Dataset, self).__init__(included_indices=[])
+        super().__init__(included_indices=[])
         self.save_directory = save_directory
         self._data_source = None
         self.in_memory = in_memory

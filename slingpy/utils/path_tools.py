@@ -23,7 +23,7 @@ from ilock import ILock
 from slingpy.utils.logging import warn
 
 
-class PathTools(object):
+class PathTools:
     """Tools for manipulating file paths."""
 
     @staticmethod

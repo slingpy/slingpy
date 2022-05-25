@@ -22,13 +22,10 @@ from abc import ABCMeta, abstractmethod
 from argparse import ArgumentParser
 from typing import AnyStr, Dict, Optional, Set, Tuple
 
-import six
-
 from slingpy.utils.logging import info
 
 
-@six.add_metaclass(ABCMeta)
-class AbstractScheduler(object):
+class AbstractScheduler(metaclass=ABCMeta):
     """
     An abstract scheduler for executing runnable code programmatically.
     """

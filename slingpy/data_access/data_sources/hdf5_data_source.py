@@ -48,7 +48,7 @@ class HDF5DataSource(AbstractDataSource):
         fill_missing_value: float = float("nan"),
         duplicate_merge_strategy: AbstractMergeStrategy = NoMergeStrategy(),
     ):
-        super(HDF5DataSource, self).__init__(included_indices)
+        super().__init__(included_indices)
 
         self.hdf5_file = hdf5_file
         """ Path to the hd5 file that is used for the underlying data storage. """

@@ -20,13 +20,12 @@ from typing import AnyStr, Dict, Generator, List, Optional, Tuple
 
 import h5py
 import numpy as np
-import six
 
 from slingpy.data_access.data_sources.composite_data_source import CompositeDataSource
 from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
 
 
-class HDF5Tools(object):
+class HDF5Tools:
     @staticmethod
     def make_target_file_name(file_name: AnyStr, version: AnyStr, prefix: AnyStr, extension: AnyStr = "h5"):
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
@@ -120,7 +119,7 @@ class HDF5Tools(object):
         with h5py.File(target_h5_file_path, "w") as hd5_file:
             if len(data) > 0:
                 is_array = isinstance(data[0], np.ndarray)
-                if isinstance(data[0], six.string_types):
+                if isinstance(data[0], str):
                     dt = str
                 elif is_array:
                     dt = data[0].dtype

@@ -26,7 +26,7 @@ from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
 from slingpy.data_access.data_sources.hdf5_tools import HDF5Tools
 
 
-class Iris(object):
+class Iris:
     @staticmethod
     def load_data(save_directory) -> Tuple[AbstractDataSource, AbstractDataSource]:
         iris = load_iris()
