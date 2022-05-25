@@ -33,7 +33,7 @@ class MyApplication(sp.AbstractBaseApplication):
                  split_index_inner: int = 0,
                  num_splits_outer: int = 5,
                  num_splits_inner: int = 5):
-        super(MyApplication, self).__init__(
+        super().__init__(
             output_directory=output_directory,
             schedule_on_slurm=schedule_on_slurm,
             split_index_outer=split_index_outer,

@@ -18,11 +18,8 @@ DEALINGS IN THE SOFTWARE.
 from abc import ABCMeta, abstractmethod
 from typing import Any, AnyStr, Dict, List, Tuple, Union
 
-import six
 
-
-@six.add_metaclass(ABCMeta)
-class AbstractExplorationStrategy(object):
+class AbstractExplorationStrategy(metaclass=ABCMeta):
     def __init__(self, hyperopt_param_ranges: Dict[AnyStr, Union[List, Tuple]]):
         """
         Abstract base exploration strategy.

@@ -46,7 +46,7 @@ class HyperoptRunPolicy(CompositeRunPolicy):
         run_parallel: bool = False,
         max_num_parallel_runs: int = 10,
     ):
-        super(HyperoptRunPolicy, self).__init__(
+        super().__init__(
             base_policy=base_policy,
             app_paths=app_paths,
             run_parallel=run_parallel,

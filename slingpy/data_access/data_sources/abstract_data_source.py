@@ -21,14 +21,12 @@ from itertools import chain
 from typing import AnyStr, Dict, List, Optional, Tuple, Union
 
 import numpy as np
-import six
 
 from slingpy.data_access.data_sources.torch_data_source import TorchDataSource
 from slingpy.utils.argument_dictionary import ArgumentDictionary
 
 
-@six.add_metaclass(ABCMeta)
-class AbstractDataSource(ArgumentDictionary):
+class AbstractDataSource(ArgumentDictionary, metaclass=ABCMeta):
     """
     An abstract base data source.
     """

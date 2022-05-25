@@ -29,7 +29,7 @@ else:
     import pickle
 
 
-class MetricDictTools(object):
+class MetricDictTools:
     """
     Tools for working with metric dictionaries, i.e. dictionaries in which each entry consists of a named evaluation
     metric and one or more associated metric values.

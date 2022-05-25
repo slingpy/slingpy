@@ -24,7 +24,7 @@ from slingpy.data_access.merge_strategies.abstract_merge_strategy import Abstrac
 
 class FirstEntryMergeStrategy(AbstractMergeStrategy):
     def __init__(self):
-        super(FirstEntryMergeStrategy, self).__init__()
+        super().__init__()
 
     def resolve(self, query_result: List[np.ndarray]) -> List[np.ndarray]:
         if len(query_result) == 0:

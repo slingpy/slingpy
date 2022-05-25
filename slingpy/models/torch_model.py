@@ -59,7 +59,7 @@ class TorchModel(TarfileSerialisationBaseModel):
         num_epochs: int = 100,
         l2_weight: float = 1e-4,
     ):
-        super(TorchModel, self).__init__()
+        super().__init__()
         self.base_module = base_module
         self.target_transformer = target_transformer
         self.loss = loss
@@ -75,7 +75,7 @@ class TorchModel(TarfileSerialisationBaseModel):
         self.early_stopping_patience = early_stopping_patience
 
     def get_config(self, deep=True):
-        config = super(TorchModel, self).get_config(deep=deep)
+        config = super().get_config(deep=deep)
         del config["base_module"]
         del config["target_transformer"]
         del config["loss"]

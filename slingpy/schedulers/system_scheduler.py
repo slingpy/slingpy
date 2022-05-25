@@ -23,7 +23,7 @@ from slingpy.schedulers.abstract_scheduler import AbstractScheduler
 from slingpy.utils.auto_argparse import AutoArgparse
 
 
-class SystemScheduler(object):
+class SystemScheduler:
     """
     A scheduler for executing code on the command line programmatically via automated conversion of instance arguments
     to command line parameters.

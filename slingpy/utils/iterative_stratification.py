@@ -213,7 +213,7 @@ class IterativeStratification(_BaseKFold):
 
     def __init__(self, n_splits=3, order=1, sample_distribution_per_fold=None, random_state=None):
         self.order = order
-        super(IterativeStratification, self).__init__(n_splits, shuffle=True, random_state=random_state)
+        super().__init__(n_splits, shuffle=True, random_state=random_state)
 
         if sample_distribution_per_fold:
             self.percentage_per_fold = sample_distribution_per_fold

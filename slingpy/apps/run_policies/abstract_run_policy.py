@@ -23,8 +23,6 @@ from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
 from typing import Any, AnyStr, Dict, Optional, Tuple
 
-import six
-
 from slingpy.utils.argument_dictionary import ArgumentDictionary
 
 
@@ -41,21 +39,20 @@ class TracebackException(Exception):
 
 
 @dataclass
-class RunResult(object):
+class RunResult:
     validation_scores: Dict[AnyStr, Any]
     test_scores: Dict[AnyStr, Any]
     model_path: Optional[AnyStr] = None
 
 
 @dataclass
-class RunResultWithMetaData(object):
+class RunResultWithMetaData:
     run_result: RunResult
     run_time: float  # In seconds.
     arguments: Dict
 
 
-@six.add_metaclass(ABCMeta)
-class AbstractRunPolicy(ArgumentDictionary):
+class AbstractRunPolicy(ArgumentDictionary, metaclass=ABCMeta):
     """
     Abstract base class for runnable policies.
     """

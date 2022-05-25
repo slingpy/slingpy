@@ -19,14 +19,12 @@ from abc import ABCMeta, abstractmethod
 from typing import AnyStr, List, Optional, Type
 
 import numpy as np
-import six
 
 from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
 from slingpy.utils.argument_dictionary import ArgumentDictionary
 
 
-@six.add_metaclass(ABCMeta)
-class AbstractBaseModel(ArgumentDictionary):
+class AbstractBaseModel(ArgumentDictionary, metaclass=ABCMeta):
     """An abstract base machine learning model."""
 
     def __init__(self, inputs: Optional = None, outputs: Optional = None):

@@ -26,7 +26,7 @@ from typing import AnyStr, Callable, Dict, List
 from slingpy.utils.logging import warn
 
 
-class PluginTools(object):
+class PluginTools:
     """Tools for working with python plugins loaded at runtime using __importlib__."""
 
     @staticmethod

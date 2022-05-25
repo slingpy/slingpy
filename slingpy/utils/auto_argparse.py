@@ -20,7 +20,7 @@ from argparse import ArgumentParser
 from typing import AnyStr
 
 
-class AutoArgparse(object):
+class AutoArgparse:
     @staticmethod
     def get_parser_for_clazz(clazz):
         parser = ArgumentParser(description="Entry for {clazz_name:}.".format(clazz_name=clazz.__class__.__name__))

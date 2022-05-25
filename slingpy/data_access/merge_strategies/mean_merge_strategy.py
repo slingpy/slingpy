@@ -24,7 +24,7 @@ from slingpy.data_access.merge_strategies.abstract_merge_strategy import Abstrac
 
 class MeanMergeStrategy(AbstractMergeStrategy):
     def __init__(self):
-        super(MeanMergeStrategy, self).__init__()
+        super().__init__()
 
     def resolve(self, query_result: List[np.ndarray]) -> List[np.ndarray]:
         return [np.mean(query_result, axis=-2)]

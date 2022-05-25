@@ -57,10 +57,8 @@ from collections import defaultdict
 from collections.abc import Iterable
 from typing import AnyStr, Dict, List
 
-import six
 
-
-class ArgumentDictionary(object):
+class ArgumentDictionary:
     @classmethod
     def _get_param_names(cls) -> List[AnyStr]:
         """Get argument names for this class."""
@@ -89,7 +87,7 @@ class ArgumentDictionary(object):
         return sorted([p.name for p in parameters])
 
     def _get_bytes(self, value) -> bytes:
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return bytes(value, "utf-8")
         elif isinstance(value, float):
             return bytearray(struct.pack("!f", value))

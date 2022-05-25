@@ -19,8 +19,6 @@ import sys
 from abc import ABCMeta
 from typing import AnyStr, Type
 
-import six
-
 from slingpy.models.abstract_base_model import AbstractBaseModel
 
 if sys.version_info < (3, 0, 0):
@@ -29,8 +27,7 @@ else:
     import pickle
 
 
-@six.add_metaclass(ABCMeta)
-class PickleableBaseModel(AbstractBaseModel):
+class PickleableBaseModel(AbstractBaseModel, metaclass=ABCMeta):
     @classmethod
     def load(cls: Type[AbstractBaseModel], file_path: AnyStr) -> "AbstractBaseModel":
         with open(file_path, "rb") as load_file:

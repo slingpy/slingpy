@@ -34,7 +34,7 @@ class SklearnModel(PickleableBaseModel):
         merge_strategy_x: AbstractMergeStrategy = NoMergeStrategy(),
         merge_strategy_y: AbstractMergeStrategy = NoMergeStrategy(),
     ):
-        super(SklearnModel, self).__init__()
+        super().__init__()
         self.base_module = base_module
         self.merge_strategy_x = merge_strategy_x
         self.merge_strategy_y = merge_strategy_y

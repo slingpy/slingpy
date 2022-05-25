@@ -26,7 +26,6 @@ from typing import Any, AnyStr, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
-import six
 
 from slingpy.apps.app_paths import AppPaths
 from slingpy.apps.run_policies.abstract_run_policy import AbstractRunPolicy, RunResult
@@ -48,12 +47,11 @@ from slingpy.utils.metric_dict_tools import MetricDictTools
 from slingpy.utils.path_tools import PathTools
 
 
-class DatasetHolder(object):
+class DatasetHolder:
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class AbstractBaseApplication(AbstractRunPolicy):
+class AbstractBaseApplication(AbstractRunPolicy, metaclass=ABCMeta):
     """
     Abstract base application to derive a machine learning starter project from.
     """
@@ -87,7 +85,7 @@ class AbstractBaseApplication(AbstractRunPolicy):
         remote_execution_num_cpus: int = 1,
         remote_execution_virtualenv_path: AnyStr = "",
     ):
-        super(AbstractBaseApplication, self).__init__()
+        super().__init__()
         self.seed = seed
         """ The random seed to use. """
         self.evaluate = evaluate
