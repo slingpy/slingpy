@@ -24,7 +24,7 @@ with open("requirements.txt") as f:
 
 setup(
     name="slingpy",
-    version="0.2.11",
+    version="0.2.12",
     python_requires=">=3.8",
     packages=find_packages(),
     author="see README.txt",
