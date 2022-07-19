@@ -15,14 +15,13 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import six
-import torch
-from typing import List
 from abc import ABCMeta, abstractmethod
+from typing import List
+
+import torch
 
 
-@six.add_metaclass(ABCMeta)
-class TorchLoss(object):
+class TorchLoss(metaclass=ABCMeta):
     """
     An abstract loss objective for training PyTorch models.
     """

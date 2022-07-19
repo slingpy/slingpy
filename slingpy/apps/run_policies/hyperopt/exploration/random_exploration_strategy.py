@@ -15,8 +15,10 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from typing import Any, AnyStr, Dict, List, Tuple, Union
+
 import numpy as np
-from typing import Tuple, Dict, Union, List, Any, AnyStr
+
 from slingpy.apps.run_policies.hyperopt.exploration import AbstractExplorationStrategy
 
 
@@ -24,8 +26,9 @@ class RandomExplorationStrategy(AbstractExplorationStrategy):
     """
     A random exploration strategy for hyper-parameter optimization.
     """
+
     def __init__(self, hyperopt_param_ranges: Dict[AnyStr, Union[List, Tuple]], seed: int = 909):
-        super(RandomExplorationStrategy, self).__init__(hyperopt_param_ranges=hyperopt_param_ranges)
+        super().__init__(hyperopt_param_ranges=hyperopt_param_ranges)
         self.random_state = np.random.RandomState(seed)
 
     def next(self, state: Any) -> Any:

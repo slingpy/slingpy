@@ -22,5 +22,5 @@ class NoDaemonContext(type(multiprocessing.get_context())):
 # because the latter is only a wrapper function, not a proper class.
 class NestablePool(multiprocessing.pool.Pool):
     def __init__(self, *args, **kwargs):
-        kwargs['context'] = NoDaemonContext()
-        super(NestablePool, self).__init__(*args, **kwargs)
+        kwargs["context"] = NoDaemonContext()
+        super().__init__(*args, **kwargs)

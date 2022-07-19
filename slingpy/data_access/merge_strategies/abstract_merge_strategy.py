@@ -15,21 +15,20 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import six
 import hashlib
-import numpy as np
-from typing import List
 from abc import ABCMeta, abstractmethod
+from typing import List
+
+import numpy as np
 
 
-@six.add_metaclass(ABCMeta)
-class AbstractMergeStrategy(object):
+class AbstractMergeStrategy(metaclass=ABCMeta):
     def __init__(self):
-        super(AbstractMergeStrategy, self).__init__()
+        super().__init__()
 
     def __hash__(self):
         m = hashlib.sha256()
-        m.update(bytes(type(self).__name__, 'utf-8'))
+        m.update(bytes(type(self).__name__, "utf-8"))
         return int(m.hexdigest(), 16)
 
     def __eq__(self, other):

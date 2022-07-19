@@ -15,19 +15,18 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import os
-import six
 import json
+import os
 import shutil
 import tarfile
 import tempfile
-from typing import AnyStr, Type
 from abc import ABCMeta, abstractmethod
+from typing import AnyStr, Type
+
 from slingpy.models.abstract_base_model import AbstractBaseModel
 
 
-@six.add_metaclass(ABCMeta)
-class TarfileSerialisationBaseModel(AbstractBaseModel):
+class TarfileSerialisationBaseModel(AbstractBaseModel, metaclass=ABCMeta):
     def get_config(self, deep=True):
         config = self.get_params(deep=deep)
         return config
@@ -70,8 +69,11 @@ class TarfileSerialisationBaseModel(AbstractBaseModel):
         shutil.rmtree(temp_dir)
 
     def save_config(self, directory_path, config, config_file_name, overwrite, outer_class):
-        already_exists_exception_message = "__directory_path__ already contains a saved" + outer_class.__name__ + \
-                                           " instance and __overwrite__ was set to __False__. Conflicting file: {}"
+        already_exists_exception_message = (
+            "__directory_path__ already contains a saved"
+            + outer_class.__name__
+            + " instance and __overwrite__ was set to __False__. Conflicting file: {}"
+        )
         config_file_path = os.path.join(directory_path, config_file_name)
         if os.path.exists(config_file_path) and not overwrite:
             raise ValueError(already_exists_exception_message.format(config_file_path))

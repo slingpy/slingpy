@@ -16,26 +16,27 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 from distutils.core import setup
+
 from setuptools import find_packages
 
-with open('requirements.txt') as f:
-    install_requires = f.read().strip().split('\n')
+with open("requirements.txt") as f:
+    install_requires = f.read().strip().split("\n")
 
 setup(
-    name='slingpy',
-    version='0.2.5',
+    name="slingpy",
+    version="0.2.12",
     python_requires=">=3.8",
     packages=find_packages(),
-    author='see README.txt',
-    author_email='github.ps@gmail.com',
+    author="see README.txt",
+    author_email="github.ps@gmail.com",
     url="https://github.com/slingpy/slingpy",
     license="MIT",
-    long_description=open('README.md').read(),
+    long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     install_requires=install_requires,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-    ]
+    ],
 )

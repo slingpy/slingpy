@@ -16,13 +16,13 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
-import six
-import time
 import pickle
+import time
 import traceback
-from dataclasses import dataclass
 from abc import ABCMeta, abstractmethod
-from typing import Dict, Any, AnyStr, Tuple, Optional
+from dataclasses import dataclass
+from typing import Any, AnyStr, Dict, Optional, Tuple
+
 from slingpy.utils.argument_dictionary import ArgumentDictionary
 
 
@@ -39,24 +39,24 @@ class TracebackException(Exception):
 
 
 @dataclass
-class RunResult(object):
+class RunResult:
     validation_scores: Dict[AnyStr, Any]
     test_scores: Dict[AnyStr, Any]
     model_path: Optional[AnyStr] = None
 
 
 @dataclass
-class RunResultWithMetaData(object):
+class RunResultWithMetaData:
     run_result: RunResult
     run_time: float  # In seconds.
     arguments: Dict
 
 
-@six.add_metaclass(ABCMeta)
-class AbstractRunPolicy(ArgumentDictionary):
+class AbstractRunPolicy(ArgumentDictionary, metaclass=ABCMeta):
     """
     Abstract base class for runnable policies.
     """
+
     @abstractmethod
     def _run(self, **kwargs) -> RunResult:
         """
@@ -88,8 +88,9 @@ class AbstractRunPolicy(ArgumentDictionary):
         return False
 
     @staticmethod
-    def run_with_file_output(inputs: Tuple[int, Dict], base_policy: "AbstractRunPolicy",
-                             is_parallel: bool = True) -> Tuple[int, AnyStr]:
+    def run_with_file_output(
+        inputs: Tuple[int, Dict], base_policy: "AbstractRunPolicy", is_parallel: bool = True
+    ) -> Tuple[int, AnyStr]:
         """
         Runnable wrapper static function for use with __functools.partial__ and pool executors.
 

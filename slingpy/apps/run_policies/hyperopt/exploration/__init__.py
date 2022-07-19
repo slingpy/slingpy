@@ -16,5 +16,5 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 from .abstract_exploration_strategy import AbstractExplorationStrategy
-from .sequential_exploration_strategy import SequentialExplorationStrategy
 from .random_exploration_strategy import RandomExplorationStrategy
+from .sequential_exploration_strategy import SequentialExplorationStrategy

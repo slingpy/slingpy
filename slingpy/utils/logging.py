@@ -36,16 +36,21 @@ def info(*msg, **kwargs):
 
 
 def log(*msg, **kwargs):
-    sep = kwargs.pop('sep', " ")
-    end = kwargs.pop('end', "\n")
-    log_level = kwargs.pop('log_level', "INFO")
-    with_timestamp = kwargs.pop('with_timestamp', True)
+    sep = kwargs.pop("sep", " ")
+    end = kwargs.pop("end", "\n")
+    log_level = kwargs.pop("log_level", "INFO")
+    with_timestamp = kwargs.pop("with_timestamp", True)
 
     initial_sep = " " if sep == "" else ""
     timestamp = " [{:.7f}]".format(time.time()) if with_timestamp else ""
 
-    print(log_level + timestamp + ":" + initial_sep, *msg, sep=sep, end=end,
-          file=sys.stdout if log_level == "INFO" else sys.stderr)
+    print(
+        log_level + timestamp + ":" + initial_sep,
+        *msg,
+        sep=sep,
+        end=end,
+        file=sys.stdout if log_level == "INFO" else sys.stderr,
+    )
 
 
 def report_duration(task, duration):
@@ -60,5 +65,7 @@ def time_function(task_name):
             t_dur = time.time() - t_start
             report_duration(task_name, t_dur)
             return return_value
+
         return func_wrapper
+
     return time_function

@@ -16,16 +16,14 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import inspect
-from typing import AnyStr
 from argparse import ArgumentParser
+from typing import AnyStr
 
 
-class AutoArgparse(object):
+class AutoArgparse:
     @staticmethod
     def get_parser_for_clazz(clazz):
-        parser = ArgumentParser(description='Entry for {clazz_name:}.'.format(
-            clazz_name=clazz.__class__.__name__
-        ))
+        parser = ArgumentParser(description="Entry for {clazz_name:}.".format(clazz_name=clazz.__class__.__name__))
         parameters = inspect.signature(clazz.__init__).parameters.items()
         for i, (parameter_name, parameter) in enumerate(parameters):
             if i == 0:
@@ -52,8 +50,9 @@ class AutoArgparse(object):
                     type_hint = str
                 else:
                     type_hint = parameter.annotation
-                parser.add_argument("--{parameter_name:}".format(parameter_name=parameter_name), help="",
-                                    type=type_hint, **kwargs)
+                parser.add_argument(
+                    "--{parameter_name:}".format(parameter_name=parameter_name), help="", type=type_hint, **kwargs
+                )
         return parser
 
     @staticmethod

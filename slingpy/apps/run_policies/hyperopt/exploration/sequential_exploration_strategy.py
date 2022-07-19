@@ -15,7 +15,8 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from typing import Tuple, Dict, Union, List, Any, AnyStr
+from typing import Any, AnyStr, Dict, List, Tuple, Union
+
 from slingpy.apps.run_policies.hyperopt.exploration import AbstractExplorationStrategy
 
 
@@ -23,8 +24,9 @@ class SequentialExplorationStrategy(AbstractExplorationStrategy):
     """
     A sequential exploration strategy for hyper-parameter optimization.
     """
+
     def __init__(self, hyperopt_param_ranges: Dict[AnyStr, Union[List, Tuple]]):
-        super(SequentialExplorationStrategy, self).__init__(hyperopt_param_ranges=hyperopt_param_ranges)
+        super().__init__(hyperopt_param_ranges=hyperopt_param_ranges)
 
     def next(self, state: Any) -> Any:
         if state is None:
@@ -39,8 +41,10 @@ class SequentialExplorationStrategy(AbstractExplorationStrategy):
                     choice = choice.item()
                 new_params[k] = choice
             else:
-                raise AssertionError("Only hyperopt_parameters with finite numbers of permutations can be used"
-                                     "with __get_next_hyperopt_choice_generator__.")
+                raise AssertionError(
+                    "Only hyperopt_parameters with finite numbers of permutations can be used"
+                    "with __get_next_hyperopt_choice_generator__."
+                )
 
         for i, key in enumerate(sorted(self.hyperopt_param_ranges.keys())):
             state[i] += 1

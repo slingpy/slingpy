@@ -33,7 +33,7 @@ class MyApplication(sp.AbstractBaseApplication):
                  split_index_inner: int = 0,
                  num_splits_outer: int = 5,
                  num_splits_inner: int = 5):
-        super(MyApplication, self).__init__(
+        super().__init__(
             output_directory=output_directory,
             schedule_on_slurm=schedule_on_slurm,
             split_index_outer=split_index_outer,
@@ -89,6 +89,17 @@ python /project_path/my_application.py --do_schedule_on_slurm
 Application parameters are automatically parsed from the command line, e.g.:
 ```bash
 python /project_path/my_application.py --output_directory=/path/to/output/dir
+```
+
+### Development
+
+The `slingpy` codebase is formatted with Black and Import Sort to ensure consistant code formatting. 
+These are run through [pre-commit](https://pre-commit.com). 
+If making code changes to `slingpy`, install the development dependencies and pre-commit git hook with:
+
+```bash
+pip install -r requirements-dev.txt
+pre-commit install
 ```
 
 ### License

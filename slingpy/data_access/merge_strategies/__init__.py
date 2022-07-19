@@ -15,9 +15,9 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from .no_merge_strategy import NoMergeStrategy
-from .mean_merge_strategy import MeanMergeStrategy
-from .random_merge_strategy import RandomMergeStrategy
 from .abstract_merge_strategy import AbstractMergeStrategy
-from .first_entry_merge_strategy import FirstEntryMergeStrategy
 from .concatenate_merge_strategy import ConcatenateMergeStrategy
+from .first_entry_merge_strategy import FirstEntryMergeStrategy
+from .mean_merge_strategy import MeanMergeStrategy
+from .no_merge_strategy import NoMergeStrategy
+from .random_merge_strategy import RandomMergeStrategy

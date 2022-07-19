@@ -15,18 +15,21 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import h5py
 import hashlib
+from typing import IO, AnyStr, Dict, List, NoReturn, Optional, Tuple, Union
+
+import h5py
 import numpy as np
-from slingpy.data_access.merge_strategies import *
-from typing import Union, List, IO, AnyStr, NoReturn, Dict, Tuple, Optional
+
 from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from slingpy.data_access.merge_strategies import *
 
 
 class HDF5DataSource(AbstractDataSource):
     """
     A data source using the h5py backend for data access.
     """
+
     COVARIATES_KEY = "covariates"
     SHAPES_KEY = "shapes"
     ROWNAMES_KEY = "rownames"
@@ -36,10 +39,16 @@ class HDF5DataSource(AbstractDataSource):
     DATASET_NAME = "name"
     DATASET_VERSION = "version"
 
-    def __init__(self, hdf5_file: Union[AnyStr, IO], included_indices: Optional[List[int]] = None,
-                 in_memory: bool = False, fill_missing: bool = True, fill_missing_value: float = float("nan"),
-                 duplicate_merge_strategy: AbstractMergeStrategy = NoMergeStrategy()):
-        super(HDF5DataSource, self).__init__(included_indices)
+    def __init__(
+        self,
+        hdf5_file: Union[AnyStr, IO],
+        included_indices: Optional[List[int]] = None,
+        in_memory: bool = False,
+        fill_missing: bool = True,
+        fill_missing_value: float = float("nan"),
+        duplicate_merge_strategy: AbstractMergeStrategy = NoMergeStrategy(),
+    ):
+        super().__init__(included_indices)
 
         self.hdf5_file = hdf5_file
         """ Path to the hd5 file that is used for the underlying data storage. """
@@ -52,9 +61,9 @@ class HDF5DataSource(AbstractDataSource):
         self.fill_missing_value = fill_missing_value
         """ Value to use to impute missing return vectors with. Only active if __fill_missing__ is set to True. """
         self.duplicate_merge_strategy = duplicate_merge_strategy
-        """ 
-        Strategy to use to resolve cases where multiple entries exist for a single row name. 
-        By default no resolution is applied and all values are returned. 
+        """
+        Strategy to use to resolve cases where multiple entries exist for a single row name.
+        By default no resolution is applied and all values are returned.
         """
 
         if included_indices is None:
@@ -82,7 +91,7 @@ class HDF5DataSource(AbstractDataSource):
     def __hash__(self):
         key = self.file_path
         m = hashlib.sha256()
-        m.update(bytes(key, 'utf-8'))
+        m.update(bytes(key, "utf-8"))
         return int(m.hexdigest(), 16)
 
     def _get_file_cache(self):
@@ -101,7 +110,7 @@ class HDF5DataSource(AbstractDataSource):
         has_dynamic_dimensions = len(shape) == 1
         if has_dynamic_dimensions:
             if HDF5DataSource.SHAPES_KEY in hd5_file:
-                original_shape = (None,)*len(hd5_file[HDF5DataSource.SHAPES_KEY].shape)
+                original_shape = (None,) * len(hd5_file[HDF5DataSource.SHAPES_KEY].shape)
             else:
                 original_shape = (None,)
             shape = shape + original_shape
@@ -124,8 +133,9 @@ class HDF5DataSource(AbstractDataSource):
 
     def _check_included_ids_format(self) -> NoReturn:
         all_identifiers = set(range(self._underlying_length()))
-        assert set(self.included_indices).issubset(all_identifiers), \
-            "All included IDs must be present in the identifier list."
+        assert set(self.included_indices).issubset(
+            all_identifiers
+        ), "All included IDs must be present in the identifier list."
 
     def _underlying_length(self):
         return self.get_shape()[0][0]
@@ -191,12 +201,14 @@ class HDF5DataSource(AbstractDataSource):
     def inverse_transform(self, item):
         column_value_maps = self.get_column_code_lists()
         if len(item) != len(column_value_maps):
-            raise AssertionError(f"Item must be the same length as the number of columns in the data source."
-                                 f"Expected {len(column_value_maps):d} but was {len(item):d}.")
+            raise AssertionError(
+                f"Item must be the same length as the number of columns in the data source."
+                f"Expected {len(column_value_maps):d} but was {len(item):d}."
+            )
 
-        item = list(map(lambda value, value_map:
-                        value_map[value] if value_map is not None else value,
-                        item, column_value_maps))
+        item = list(
+            map(lambda value, value_map: value_map[value] if value_map is not None else value, item, column_value_maps)
+        )
         return item
 
     def is_variable_length(self) -> bool:
@@ -256,8 +268,9 @@ class HDF5DataSource(AbstractDataSource):
         else:
             if self.fill_missing:
                 return_shape = self.get_shape()[0][1:]
-                return_value = [np.full(HDF5DataSource.replace_none_with(return_shape),
-                                        fill_value=self.fill_missing_value)]
+                return_value = [
+                    np.full(HDF5DataSource.replace_none_with(return_shape), fill_value=self.fill_missing_value)
+                ]
                 return return_value
             idx = []
         if isinstance(idx, list):

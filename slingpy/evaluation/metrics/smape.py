@@ -15,8 +15,10 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from typing import AnyStr, Optional
+
 import numpy as np
-from typing import Optional, AnyStr
+
 from slingpy.evaluation.metrics.abstract_metric import AbstractMetric
 
 
@@ -29,5 +31,5 @@ class SymmetricMeanAbsolutePercentageError(AbstractMetric):
         return "SMAPE"
 
     def evaluate(self, y_pred: np.ndarray, y_true: np.ndarray, threshold: Optional[float] = None) -> np.ndarray:
-        ret_val = 100. / len(y_true) * np.sum(2 * np.abs(y_pred - y_true) / (np.abs(y_true) + np.abs(y_pred)))
+        ret_val = 100.0 / len(y_true) * np.sum(2 * np.abs(y_pred - y_true) / (np.abs(y_true) + np.abs(y_pred)))
         return ret_val

@@ -15,22 +15,30 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import os
 import inspect
+import os
 from typing import AnyStr
-from slingpy.utils.auto_argparse import AutoArgparse
+
 from slingpy.schedulers.abstract_scheduler import AbstractScheduler
+from slingpy.utils.auto_argparse import AutoArgparse
 
 
-class SystemScheduler(object):
+class SystemScheduler:
     """
     A scheduler for executing code on the command line programmatically via automated conversion of instance arguments
     to command line parameters.
     """
 
     @staticmethod
-    def execute(clazz, mem_limit_in_mb: int = 2048, num_cpus: int = 1, virtualenv_path: AnyStr = "",
-                project_dir_path: AnyStr = "", exclude: AnyStr = "", **kwargs):
+    def execute(
+        clazz,
+        mem_limit_in_mb: int = 2048,
+        num_cpus: int = 1,
+        virtualenv_path: AnyStr = "",
+        project_dir_path: AnyStr = "",
+        exclude: AnyStr = "",
+        **kwargs,
+    ):
         output_directory = kwargs["output_directory"]
         logfile = os.path.join(output_directory, "log.txt")
         err_logfile = os.path.join(output_directory, "errlog.txt")
@@ -38,10 +46,12 @@ class SystemScheduler(object):
 
         parser = AutoArgparse.get_parser_for_clazz(clazz)
         argument_list = AbstractScheduler.convert_arguments_dict_to_program_argument_string(parser, kwargs)
-        cmd = f"source {virtualenv_path}/bin/activate && " \
-              f"export PYTHONPATH={project_dir_path}:\$PYTHONPATH && " \
-              f"export HDF5_USE_FILE_LOCKING='FALSE' && " \
-              f"python {main_app_path} {argument_list}"
+        cmd = (
+            f"source {virtualenv_path}/bin/activate && "
+            f"export PYTHONPATH={project_dir_path}:\$PYTHONPATH && "
+            f"export HDF5_USE_FILE_LOCKING='FALSE' && "
+            f"python {main_app_path} {argument_list}"
+        )
         cmd = f"{cmd} > {logfile} 2> {err_logfile} "
 
         contents, err_contents = AbstractScheduler.run_command(cmd, logfile, err_logfile)

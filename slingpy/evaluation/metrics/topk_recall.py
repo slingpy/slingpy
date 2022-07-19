@@ -15,9 +15,11 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from typing import AnyStr, Optional
+
 import numpy as np
-from typing import Optional, AnyStr
 from sklearn.metrics import mean_squared_error
+
 from slingpy.evaluation.metrics.abstract_metric import AbstractMetric
 
 
@@ -42,6 +44,6 @@ class TopKRecall(AbstractMetric):
         top_k = int(np.ceil(self.top_percentile_threshold * len(y_pred)))
         count = 0
         for k_i in range(num_top):
-            count += (y_true_rank_index[reverse_y_pred_rank_index[k_i]] < top_k)
+            count += y_true_rank_index[reverse_y_pred_rank_index[k_i]] < top_k
         ret_val = float(count) / top_k
         return np.array(ret_val)

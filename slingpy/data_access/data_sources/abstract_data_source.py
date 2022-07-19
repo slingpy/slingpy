@@ -15,21 +15,22 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import six
-import numpy as np
-from itertools import chain
-from collections import defaultdict
 from abc import ABCMeta, abstractmethod
-from typing import Tuple, List, Union, Optional, AnyStr, Dict
-from slingpy.utils.argument_dictionary import ArgumentDictionary
+from collections import defaultdict
+from itertools import chain
+from typing import AnyStr, Dict, List, Optional, Tuple, Union
+
+import numpy as np
+
 from slingpy.data_access.data_sources.torch_data_source import TorchDataSource
+from slingpy.utils.argument_dictionary import ArgumentDictionary
 
 
-@six.add_metaclass(ABCMeta)
-class AbstractDataSource(ArgumentDictionary):
+class AbstractDataSource(ArgumentDictionary, metaclass=ABCMeta):
     """
     An abstract base data source.
     """
+
     def __init__(self, included_indices: List[int], row_index: Optional = None):
         self.included_indices = included_indices
         self.row_index = row_index
@@ -39,8 +40,10 @@ class AbstractDataSource(ArgumentDictionary):
         for key in d1.keys():
             if key not in d2:
                 return False
-            elif d1[key] != d2[key] and not ((isinstance(d1[key], float) and np.isnan(d1[key])) and
-                                             (isinstance(d2[key], float) and np.isnan(d2[key]))):
+            elif np.any(d1[key] != d2[key]) and not (
+                (isinstance(d1[key], float) and np.isnan(d1[key]))
+                and (isinstance(d2[key], float) and np.isnan(d2[key]))
+            ):
                 # Consider (NaN == NaN) = True for dict comparison.
                 return False
         return True
@@ -104,8 +107,7 @@ class AbstractDataSource(ArgumentDictionary):
             accessed individually by index or name instead.
         """
         if row_names:
-            ret_val = list(map(lambda x: np.stack(x), zip(*[self.get_by_row_name(row_name)
-                                                            for row_name in row_names])))
+            ret_val = list(map(lambda x: np.stack(x), zip(*[self.get_by_row_name(row_name) for row_name in row_names])))
             return ret_val
         else:
             return self._get_data()

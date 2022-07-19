@@ -51,8 +51,8 @@ import unicodedata
 from typing import AnyStr
 
 
-class TextTools(object):
-    """ Tools for working with text strings. """
+class TextTools:
+    """Tools for working with text strings."""
 
     @staticmethod
     def file_safe_encode(value: AnyStr, allow_unicode=False) -> AnyStr:
@@ -61,8 +61,8 @@ class TextTools(object):
         """
         value = str(value)
         if allow_unicode:
-            value = unicodedata.normalize('NFKC', value)
+            value = unicodedata.normalize("NFKC", value)
         else:
-            value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
-        value = re.sub(r'[^\w\s-]', '', value.lower())
-        return re.sub(r'[-\s]+', '-', value).strip('-_')
+            value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
+        value = re.sub(r"[^\w\s-]", "", value.lower())
+        return re.sub(r"[-\s]+", "-", value).strip("-_")

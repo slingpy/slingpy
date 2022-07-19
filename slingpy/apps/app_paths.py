@@ -19,15 +19,16 @@ import os
 from typing import AnyStr
 
 
-class AppPaths(object):
+class AppPaths:
     """
     Pre-defined application paths.
     """
+
     def __init__(self, project_root_directory):
         self.project_root_directory = project_root_directory
-        """ 
+        """
         The project's root directory. All custom python packages must either be located in sub-directory of the root
-         directory or must be loaded as a dependency in the current python environment (e.g., in a virtualenv). 
+         directory or must be loaded as a dependency in the current python environment (e.g., in a virtualenv).
         """
 
     @staticmethod
@@ -59,11 +60,13 @@ class AppPaths(object):
         return os.path.join(output_directory, f"model.{extension}")
 
     @staticmethod
-    def get_prediction_file_path(output_directory: AnyStr, set_name: AnyStr,
-                                 extension: AnyStr, output_index: int) -> AnyStr:
+    def get_prediction_file_path(
+        output_directory: AnyStr, set_name: AnyStr, extension: AnyStr, output_index: int
+    ) -> AnyStr:
         return os.path.join(output_directory, f"{set_name}_predictions.output_{output_index}.{extension}")
 
     @staticmethod
-    def get_thresholded_prediction_file_path(output_directory: AnyStr, set_name: AnyStr,
-                                             extension: AnyStr, output_index: int) -> AnyStr:
+    def get_thresholded_prediction_file_path(
+        output_directory: AnyStr, set_name: AnyStr, extension: AnyStr, output_index: int
+    ) -> AnyStr:
         return os.path.join(output_directory, f"{set_name}_predictions.output_{output_index}.tresholded.{extension}")

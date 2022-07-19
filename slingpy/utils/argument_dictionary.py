@@ -50,22 +50,21 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import six
-import struct
-import inspect
 import hashlib
+import inspect
+import struct
 from collections import defaultdict
 from collections.abc import Iterable
-from typing import List, AnyStr, Dict
+from typing import AnyStr, Dict, List
 
 
-class ArgumentDictionary(object):
+class ArgumentDictionary:
     @classmethod
     def _get_param_names(cls) -> List[AnyStr]:
-        """ Get argument names for this class. """
+        """Get argument names for this class."""
         # fetch the constructor or the original constructor before
         # deprecation wrapping if any
-        init = getattr(cls.__init__, 'deprecated_original', cls.__init__)
+        init = getattr(cls.__init__, "deprecated_original", cls.__init__)
         if init is object.__init__:
             # No explicit constructor to introspect
             return []
@@ -74,34 +73,34 @@ class ArgumentDictionary(object):
         # to represent
         init_signature = inspect.signature(init)
         # Consider the constructor parameters excluding 'self'
-        parameters = [p for p in init_signature.parameters.values()
-                      if p.name != 'self' and p.kind != p.VAR_KEYWORD]
+        parameters = [p for p in init_signature.parameters.values() if p.name != "self" and p.kind != p.VAR_KEYWORD]
         for p in parameters:
             if p.kind == p.VAR_POSITIONAL:
-                raise RuntimeError("scikit-learn estimators should always "
-                                   "specify their parameters in the signature"
-                                   " of their __init__ (no varargs)."
-                                   " %s with constructor %s doesn't "
-                                   " follow this convention."
-                                   % (cls, init_signature))
+                raise RuntimeError(
+                    "scikit-learn estimators should always "
+                    "specify their parameters in the signature"
+                    " of their __init__ (no varargs)."
+                    " %s with constructor %s doesn't "
+                    " follow this convention." % (cls, init_signature)
+                )
         # Extract and sort argument names excluding 'self'
         return sorted([p.name for p in parameters])
 
     def _get_bytes(self, value) -> bytes:
-        if isinstance(value, six.string_types):
-            return bytes(value, 'utf-8')
+        if isinstance(value, str):
+            return bytes(value, "utf-8")
         elif isinstance(value, float):
             return bytearray(struct.pack("!f", value))
         elif isinstance(value, int):
-            return value.to_bytes(value.bit_length(), byteorder='big')
+            return value.to_bytes(value.bit_length(), byteorder="big")
         elif isinstance(value, bool):
             return bytes(value)
         elif value is None:
             the_hash = 0
-            return the_hash.to_bytes(the_hash.bit_length(), byteorder='big')
+            return the_hash.to_bytes(the_hash.bit_length(), byteorder="big")
         elif hasattr(value, "__hash__") and value.__hash__ is not None:
             the_hash = value.__hash__()
-            the_hash = the_hash.to_bytes(the_hash.bit_length(), byteorder='big', signed=the_hash < 0)
+            the_hash = the_hash.to_bytes(the_hash.bit_length(), byteorder="big", signed=the_hash < 0)
             return the_hash
         elif isinstance(value, Iterable):
             the_hash = b"".join([self._get_bytes(it) for it in value])
@@ -136,9 +135,9 @@ class ArgumentDictionary(object):
         out = dict()
         for key in self._get_param_names():
             value = getattr(self, key)
-            if deep and hasattr(value, 'get_params'):
+            if deep and hasattr(value, "get_params"):
                 deep_items = value.get_params().items()
-                out.update((key + '__' + k, val) for k, val in deep_items)
+                out.update((key + "__" + k, val) for k, val in deep_items)
             out[key] = value
         return out
 
@@ -159,12 +158,13 @@ class ArgumentDictionary(object):
 
         nested_params = defaultdict(dict)  # grouped by prefix
         for key, value in params.items():
-            key, delim, sub_key = key.partition('__')
+            key, delim, sub_key = key.partition("__")
             if key not in valid_params:
-                raise ValueError('Invalid parameter %s for instance %s. '
-                                 'Check the list of available parameters '
-                                 'with `instance.get_params().keys()`.' %
-                                 (key, self))
+                raise ValueError(
+                    "Invalid parameter %s for instance %s. "
+                    "Check the list of available parameters "
+                    "with `instance.get_params().keys()`." % (key, self)
+                )
 
             if delim:
                 nested_params[key][sub_key] = value

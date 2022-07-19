@@ -15,22 +15,21 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import six
 import hashlib
-import numpy as np
-from typing import Optional, AnyStr
 from abc import ABCMeta, abstractmethod
+from typing import AnyStr, Optional
+
+import numpy as np
 
 
-@six.add_metaclass(ABCMeta)
-class AbstractMetric(object):
+class AbstractMetric(metaclass=ABCMeta):
     """
     An abstract metric for evaluating model properties.
     """
 
     def __hash__(self):
         m = hashlib.sha256()
-        m.update(bytes(type(self).__name__, 'utf-8'))
+        m.update(bytes(type(self).__name__, "utf-8"))
         return int(m.hexdigest(), 16)
 
     def __eq__(self, other):

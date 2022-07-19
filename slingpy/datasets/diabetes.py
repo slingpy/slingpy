@@ -16,20 +16,22 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 DEALINGS IN THE SOFTWARE.
 """
 import os
-import numpy as np
 from typing import Tuple
+
+import numpy as np
 from sklearn.datasets import load_diabetes
-from slingpy.data_access.data_sources.hdf5_tools import HDF5Tools
-from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
+
 from slingpy.data_access.data_sources.abstract_data_source import AbstractDataSource
+from slingpy.data_access.data_sources.hdf5_data_source import HDF5DataSource
+from slingpy.data_access.data_sources.hdf5_tools import HDF5Tools
 
 
-class Diabetes(object):
+class Diabetes:
     @staticmethod
     def load_data(save_directory) -> Tuple[AbstractDataSource, AbstractDataSource]:
         diabetes = load_diabetes()
-        x, y = diabetes['data'], diabetes['target'][:, np.newaxis]
-        feature_names = diabetes['feature_names']
+        x, y = diabetes["data"], diabetes["target"][:, np.newaxis]
+        feature_names = diabetes["feature_names"]
 
         h5_file_x = os.path.join(save_directory, "diabetes_x.h5")
         h5_file_y = os.path.join(save_directory, "diabetes_y.h5")
